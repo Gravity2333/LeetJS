@@ -144,10 +144,15 @@
     <script>
         // ==================== Prim 算法 ====================
         function edgesToGrid(edges, n) {
-            const grid = Array.from({ length: n + 1 }, () => new Array(n + 1).fill(Infinity));
-            edges.forEach(([from, to, weight]) => {
+            const grid = Array.from({ length: n + 1 }, () =>
+                new Array(n + 1).fill(Infinity)
+            );
+
+            edges.forEach((edge) => {
+                const [from, to, weight] = edge;
                 grid[from][to] = grid[to][from] = weight;
             });
+
             return grid;
         }
 
@@ -160,12 +165,16 @@
                     minValue = distances[i];
                 }
             }
-            return minIndex;
+            return minIndex == Infinity ? -1 : minIndex;
         }
 
         function buildEmptyGrid(nodeNum) {
-            const result = Array.from({ length: nodeNum + 1 }, () => new Array(nodeNum + 1).fill(Infinity));
-            for (let i = 0; i < result.length; i++) result[i][i] = 0;
+            const result = Array.from({ length: nodeNum + 1 }, () =>
+                new Array(nodeNum + 1).fill(Infinity)
+            );
+            for (let i = 0; i < result.length; i++) {
+                result[i][i] = 0;
+            }
             return result;
         }
 
@@ -174,18 +183,30 @@
             const distances = new Array(nodeNum + 1).fill(Infinity);
             const visited = new Array(nodeNum + 1).fill(false);
             const result = buildEmptyGrid(nodeNum);
-            let lastAddNode = 1;
 
+            // 上一个加入的节点
+            let lastAddNode = 1;
             for (let i = 0; i < nodeNum - 1; i++) {
+                // 更 visited
                 visited[lastAddNode] = true;
-                grid[lastAddNode].forEach((neighbor, index) => {
-                    if (neighbor < distances[index]) distances[index] = neighbor;
+                // 获取neighbour
+                const neighbours = grid[lastAddNode];
+                // 更新distance
+                neighbours.forEach((neighbour, index) => {
+                    if (neighbour < distances[index]) {
+                        distances[index] = neighbour;
+                    }
                 });
+                // 获取最小的距离
                 const minNeighborIndex = getMinDistanceIndex(distances, visited);
-                result[minNeighborIndex][lastAddNode] = result[lastAddNode][minNeighborIndex] = distances[minNeighborIndex];
+                if (minNeighborIndex === -1) break;
+                // 加入最小生成树
+                result[minNeighborIndex][lastAddNode] = result[lastAddNode][
+                    minNeighborIndex
+                ] = distances[minNeighborIndex];
+                // 更新 lastAddNode
                 lastAddNode = minNeighborIndex;
             }
-            console.log(result)
             return result;
         }
 
