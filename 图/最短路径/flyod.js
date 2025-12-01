@@ -45,6 +45,15 @@ function flyod(edges, nodeCnt, edgesCnt) {
   );
   /** 初始化邻接矩阵 */
   results[0] = initGrid(edges, nodeCnt);
+  /** 注意 明确dp数组含义 dp[k][i][j] 表示 允许k为中间节点的情况下 最小值 所以0的初始化需要跑一遍 而不是直接grid */
+  for (let i = 0; i <= nodeCnt; i++) {
+    for (let j = 0; j <= nodeCnt; j++) {
+      results[0][i][j] = Math.min(
+        results[0][i][0] + results[0][0][j],
+        results[0][i][j]
+      );
+    }
+  }
 
   for (let k = 1; k <= nodeCnt; k++) {
     for (let i = 0; i <= nodeCnt; i++) {
@@ -57,13 +66,13 @@ function flyod(edges, nodeCnt, edgesCnt) {
     }
   }
 
-  results.find = (i,j) => {
-    return results[nodeCnt][i][j]
-  }
+  results.find = (i, j) => {
+    return results[nodeCnt][i][j];
+  };
 
   return results;
 }
 
-const results = flyod(edges, V, E)
-console.log(results.find(2,3));
-console.log(results.find(3,4));
+const results = flyod(edges, V, E);
+console.log(results.find(2, 3));
+console.log(results.find(3, 4));
