@@ -1,0 +1,467 @@
+<!doctype html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>A* 骑士路径可视化（100×100）</title>
+    <style>
+        :root {
+            --cell-size: 7px;
+            /* 调整格子大小 */
+            --gap: 0.5px;
+            --grid-width: calc((var(--cell-size) + var(--gap)) * 100);
+            --accent: #f7f3d7;
+            --bg: #0f1720;
+            --panel: #0b1220;
+            --muted: #9aa3b2;
+        }
+
+        html,
+        body {
+            height: 100%;
+            margin: 0;
+            font-family: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+            background: linear-gradient(180deg, #051025 0%, #071a2a 100%);
+            color: #e6eef6
+        }
+
+        .app {
+            max-width: 1200px;
+            margin: 24px auto;
+            padding: 18px;
+            border-radius: 12px;
+            background: linear-gradient(180deg, rgba(255, 255, 255, 0.02), rgba(255, 255, 255, 0.01));
+            box-shadow: 0 8px 30px rgba(2, 6, 23, 0.6)
+        }
+
+        header {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            margin-bottom: 12px
+        }
+
+        h1 {
+            font-size: 18px;
+            margin: 0
+        }
+
+        .controls {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+            align-items: center
+        }
+
+        .controls label {
+            font-size: 13px;
+            color: var(--muted)
+        }
+
+        .coords {
+            display: flex;
+            gap: 8px;
+            align-items: center
+        }
+
+        input[type=number] {
+            width: 70px;
+            padding: 6px 8px;
+            border-radius: 8px;
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            background: rgba(255, 255, 255, 0.02);
+            color: inherit
+        }
+
+        button {
+            background: #0ea5a4;
+            border: none;
+            padding: 8px 12px;
+            border-radius: 10px;
+            color: #052022;
+            font-weight: 600;
+            cursor: pointer
+        }
+
+        button:active {
+            transform: translateY(1px)
+        }
+
+        .board-wrap {
+            display: flex;
+            gap: 18px
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(100, var(--cell-size));
+            grid-auto-rows: var(--cell-size);
+            gap: var(--gap);
+            background: linear-gradient(180deg, rgba(255, 255, 255, 0.01), rgba(0, 0, 0, 0.02));
+            padding: 8px;
+            border-radius: 8px;
+            overflow: auto;
+            max-height: 720px;
+            width: calc(var(--grid-width) + 16px);
+            box-shadow: 0 6px 20px rgba(2, 6, 23, 0.5)
+        }
+
+        .cell {
+            width: var(--cell-size);
+            height: var(--cell-size);
+            border-radius: 2px;
+            display: block
+        }
+
+        .cell.empty {
+            background: transparent
+        }
+
+        .cell.visited {
+            background: var(--accent)
+        }
+
+        .cell.start {
+            background: #ef4444;
+            box-shadow: 0 0 6px rgba(239, 68, 68, 0.6)
+        }
+
+        .cell.end {
+            background: #10b981;
+            box-shadow: 0 0 6px rgba(16, 185, 129, 0.45)
+        }
+
+        .legend {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            padding: 8px;
+            color: var(--muted)
+        }
+
+        .legend .row {
+            display: flex;
+            gap: 8px;
+            align-items: center
+        }
+
+        .swatch {
+            width: 18px;
+            height: 12px;
+            border-radius: 4px
+        }
+
+        .info {
+            margin-top: 8px;
+            color: var(--muted);
+            font-size: 13px
+        }
+
+        .cell:hover {
+            outline: 2px solid rgba(255, 255, 255, 0.06)
+        }
+
+        .top-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center
+        }
+
+        footer {
+            margin-top: 12px;
+            color: var(--muted);
+            font-size: 13px
+        }
+
+        .status {
+            font-size: 13px;
+            color: var(--muted)
+        }
+
+        .controls .small {
+            font-size: 12px;
+            color: var(--muted)
+        }
+    </style>
+</head>
+
+<body>
+    <div class="app">
+        <div class="top-row">
+            <header>
+                <h1>A* 骑士路径可视化（100 × 100）</h1>
+                <div class="controls">
+                    <label class="small">起点</label>
+                    <div class="coords">
+                        <input id="sx" type="number" min="0" max="99" value="5"> X
+                        <input id="sy" type="number" min="0" max="99" value="2"> Y
+                    </div>
+                    <label class="small">终点</label>
+                    <div class="coords">
+                        <input id="tx" type="number" min="0" max="99" value="5"> X
+                        <input id="ty" type="number" min="0" max="99" value="4"> Y
+                    </div>
+                    <button id="runBtn">查找路径</button>
+                    <button id="resetBtn" style="background:#64748b;color:white">重置视图</button>
+                </div>
+            </header>
+
+            <div class="legend">
+                <div class="row"><span class="swatch" style="background:#ef4444"></span> 起点</div>
+                <div class="row"><span class="swatch" style="background:#10b981"></span> 终点</div>
+                <div class="row"><span class="swatch" style="background:var(--accent)"></span> 已访问（步数）</div>
+                <div class="row"><span class="swatch"
+                        style="background:transparent;border:1px dashed rgba(255,255,255,0.04)"></span> 未访问（Infinity）
+                </div>
+                <div class="info">鼠标移动到格子上可查看该格的步数（若为 Infinity 则为空）</div>
+            </div>
+        </div>
+
+        <div class="board-wrap" style="margin-top:12px">
+            <div id="grid" class="grid"></div>
+            <div style="flex:1;min-width:220px;padding:8px;color:var(--muted)">
+                <div style="margin-bottom:8px">说明：</div>
+                <div>这是 100×100 的格子（索引从 0 到 99）。输入起点与终点后点击“查找路径”，页面会调用 A* 函数并渲染每个格子的最短步数（若被访问）。</div>
+                <div style="margin-top:12px" class="status"><strong id="stat">准备就绪</strong></div>
+            </div>
+        </div>
+
+        <footer>实现：A*（启发函数使用欧氏距离平方），格子被访问显示浅黄色；开始点红色，结束点绿色。</footer>
+    </div>
+
+    <script>
+        // === MiniHeap（修复版） ===
+        class MiniHeap {
+            constructor(init = [], compare = (a, b) => a - b) {
+                this.data = [];
+                this.compare = compare;
+                this.size = 0;
+                init.forEach((elem) => this.push(elem));
+            }
+
+            push(elem) {
+                const lastPos = this.size++;
+                this.data[lastPos] = elem;
+                this._shiftUp(lastPos);
+            }
+
+            peak() {
+                return this.data[0];
+            }
+
+            pop() {
+                if (this.size === 0) return;
+
+                const lastPos = this.size-- - 1;
+                const popItem = this.data[0]
+                const lastElem = this.data.pop();
+                if (lastPos > 0) {
+                    this.data[0] = lastElem;
+                    this._shiftDown(0);
+                }
+                return popItem;
+            }
+
+            _swap(i, j) {
+                const tmp = this.data[i];
+                this.data[i] = this.data[j];
+                this.data[j] = tmp;
+            }
+
+            _shiftUp(i) {
+                let currentIndex = i;
+                while (currentIndex > 0) {
+                    const parentIndex = Math.trunc((currentIndex - 1) / 2);
+                    if (this.compare(this.data[parentIndex], this.data[currentIndex]) > 0) {
+                        this._swap(parentIndex, currentIndex);
+                        currentIndex = parentIndex;
+                    } else {
+                        break;
+                    }
+                }
+            }
+
+            _shiftDown(i) {
+                const n = this.size;
+                let currentIndex = i;
+
+                while (true) {
+                    const left = currentIndex * 2 + 1;
+                    const right = left + 1;
+                    let smallest = currentIndex;
+
+                    // 左子更小？
+                    if (left < n && this.compare(this.data[left], this.data[smallest]) < 0) {
+                        smallest = left;
+                    }
+
+                    // 右子更小？
+                    if (right < n && this.compare(this.data[right], this.data[smallest]) < 0) {
+                        smallest = right;
+                    }
+
+                    // 如果最小的不是当前节点，则交换
+                    if (smallest !== currentIndex) {
+                        this._swap(currentIndex, smallest);
+                        currentIndex = smallest;
+                    } else {
+                        break;
+                    }
+                }
+            }
+        }
+
+        const moves = [
+            [1, 2],
+            [2, 1],
+            [-1, -2],
+            [-2, -1],
+            [-1, 2],
+            [-2, 1],
+            [1, -2],
+            [2, -1],
+        ];
+
+        function initGrid(N) {
+            return Array.from({ length: N + 1 }, () => new Array(N + 1).fill(Infinity));
+        }
+
+        // 计算距离
+        function dist(from, to) {
+            return Math.pow(from[0] - to[0], 2) + Math.pow(from[1] - to[1], 2);
+        }
+
+        // 是否有效
+        function isValid(pos) {
+            return pos[0] >= 0 && pos[0] < 100 && pos[1] >= 0 && pos[1] < 100;
+        }
+
+        function astar(from, to) {
+            // 100 行列 格子
+            const grid = initGrid(100);
+
+            grid[from[0]][from[1]] = 0;
+
+            const queue = new MiniHeap([], (a, b) => a.steps - b.steps);
+
+            const initialDist = dist(from, to);
+
+            queue.push({
+                steps: initialDist,
+                pos: from,
+            });
+
+            while (queue.size > 0) {
+                const { pos: currentPos } = queue.pop();
+                if (currentPos[0] === to[0] && currentPos[1] === to[1]) {
+                    return [grid[currentPos[0]][currentPos[1]], grid];
+                }
+                for (const move of moves) {
+                    // 下一个要查找的位置
+                    const nextPos = [currentPos[0] + move[0], currentPos[1] + move[1]];
+                    if (!isValid(nextPos)) continue;
+                    // 到达next节点的steps
+                    const currentSteps = grid[currentPos[0]][currentPos[1]] + 1;
+                    if (currentSteps < grid[nextPos[0]][nextPos[1]]) {
+                        // 走到next节点 是不是耗费更少的steps
+                        grid[nextPos[0]][nextPos[1]] = currentSteps;
+                        // 预测的steps
+                        const predictSteps = dist(nextPos, to);
+                        queue.push({
+                            steps: predictSteps,
+                            pos: nextPos,
+                        });
+                    }
+                }
+            }
+        }
+
+        // === 渲染器 ===
+        const gridEl = document.getElementById('grid');
+        const N = 100;
+
+        function createEmptyGrid() {
+            gridEl.innerHTML = '';
+            // create cells once
+            for (let i = 0; i < N; i++) {
+                for (let j = 0; j < N; j++) {
+                    const cell = document.createElement('div');
+                    cell.className = 'cell empty';
+                    cell.dataset.r = i;
+                    cell.dataset.c = j;
+                    cell.title = '';
+                    gridEl.appendChild(cell);
+                }
+            }
+        }
+
+        createEmptyGrid();
+
+        function renderGrid(grid, from, to) {
+            const children = gridEl.children;
+            for (let i = 0; i < N; i++) {
+                for (let j = 0; j < N; j++) {
+                    const idx = i * N + j;
+                    const cell = children[idx];
+                    const v = grid[i][j];
+                    cell.className = 'cell';
+                    if (!isFinite(v)) {
+                        cell.classList.add('empty');
+                        cell.title = '';
+                        cell.style.background = 'transparent';
+                    } else {
+                        cell.classList.add('visited');
+                        cell.title = `steps: ${v}`;
+                        // use a subtle scale of yellow by steps
+                        const alpha = Math.min(0.85, 0.18 + Math.log2(v + 1) * 0.02);
+                        cell.style.background = `rgba(251, 241, 118, ${alpha})`;
+                    }
+
+                    // start/end override
+                    if (i === from[0] && j === from[1]) {
+                        cell.className = 'cell start';
+                        cell.title = `start: (${from[0]}, ${from[1]})`;
+                    }
+                    if (i === to[0] && j === to[1]) {
+                        cell.className = 'cell end';
+                        cell.title = `end: (${to[0]}, ${to[1]})`;
+                    }
+                }
+            }
+        }
+
+        // === UI 绑定 ===
+        const runBtn = document.getElementById('runBtn');
+        const resetBtn = document.getElementById('resetBtn');
+        const statEl = document.getElementById('stat');
+
+        runBtn.addEventListener('click', () => {
+            const sx = Number(document.getElementById('sx').value);
+            const sy = Number(document.getElementById('sy').value);
+            const tx = Number(document.getElementById('tx').value);
+            const ty = Number(document.getElementById('ty').value);
+
+            if ([sx, sy, tx, ty].some(x => Number.isNaN(x))) return alert('请输入有效数字');
+            if (![sx, sy, tx, ty].every(v => v >= 0 && v < N)) return alert('坐标范围需在 0 到 99 之间');
+
+            statEl.textContent = '计算中...';
+
+            // slight delay for UI update
+            setTimeout(() => {
+                const t0 = performance.now();
+                const [steps, grid,] = astar([sx, sy], [tx, ty], N);
+                const t1 = performance.now();
+                renderGrid(grid, [sx, sy], [tx, ty]);
+                statEl.textContent = `完成：耗时 ${Math.round(t1 - t0)} ms，目标步骤：${isFinite(steps) ? steps : '未到达'}`;
+            }, 20);
+        });
+
+        resetBtn.addEventListener('click', () => {
+            createEmptyGrid();
+            statEl.textContent = '已重置';
+        });
+    </script>
+</body>
+
+</html>
