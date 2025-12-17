@@ -229,7 +229,7 @@ function runTests(bellmanFordFunction) {
   }
 }
 
-function hasNegativeWeightCycle(edges, n) {
+function hasNegativeWeightCycleSPFA(edges, n) {
   /** dist 数组 */
   const dist = new Array(n + 1).fill(Infinity);
   /** losen函数 */
@@ -240,18 +240,38 @@ function hasNegativeWeightCycle(edges, n) {
       dist[to] = dist[from] + weight;
     }
   }
+
+  function spfa() {
+    const queue = [1];
+    const visitiedSet = new Set();
+    visitiedSet.add(1);
+    while (queue.length > 0) {
+      const top = queue.shift();
+      for (let edge of edges) {
+        const [from, to] = edge;
+        if (from === top) {
+          losen(edge);
+          if (!visitiedSet.has(to)) {
+            visitiedSet.add(to);
+            queue.push(to);
+          }
+        }
+      }
+    }
+  }
+
   /** 开始点距离为 0  */
   dist[1] = 1;
   for (let i = 1; i < n - 1; i++) {
-    edges.forEach(losen);
+    spfa();
   }
 
   const sum = dist.slice(1).reduce((prev, curr) => prev + curr, 0);
-  edges.forEach(losen);
+  spfa();
   const sum2 = dist.slice(1).reduce((prev, curr) => prev + curr, 0);
   return sum !== sum2;
 }
 
 // 运行测试
 console.log("🔄 开始测试你的Bellman-Ford算法...\n");
-runTests(hasNegativeWeightCycle);
+runTests(hasNegativeWeightCycleSPFA);

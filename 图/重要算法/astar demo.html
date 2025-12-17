@@ -4,7 +4,7 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>A* 骑士路径可视化（100×100）</title>
+    <title>A* 可视化（100×100）</title>
     <style>
         :root {
             --cell-size: 7px;
@@ -231,8 +231,9 @@
     </div>
 
     <script>
-        // === MiniHeap（修复版） ===
-        class MiniHeap {
+
+        // PriorityQueue
+        class PriorityQueue {
             constructor(init = [], compare = (a, b) => a - b) {
                 this.data = [];
                 this.compare = compare;
@@ -254,7 +255,7 @@
                 if (this.size === 0) return;
 
                 const lastPos = this.size-- - 1;
-                const popItem = this.data[0]
+                const popItem = this.data[0];
                 const lastElem = this.data.pop();
                 if (lastPos > 0) {
                     this.data[0] = lastElem;
@@ -297,7 +298,10 @@
                     }
 
                     // 右子更小？
-                    if (right < n && this.compare(this.data[right], this.data[smallest]) < 0) {
+                    if (
+                        right < n &&
+                        this.compare(this.data[right], this.data[smallest]) < 0
+                    ) {
                         smallest = right;
                     }
 
@@ -312,24 +316,20 @@
             }
         }
 
-        var moves = [
-            [1, 2],
-            [2, 1],
-            [-1, -2],
-            [-2, -1],
-            [-1, 2],
-            [-2, 1],
-            [1, -2],
-            [2, -1],
+        const moves = [
+            [-1, 0],
+            [0, -1],
+            [1, 0],
+            [0, 1],
         ];
 
         function initGrid(N) {
-            return Array.from({ length: N + 1 }, () => new Array(N + 1).fill(Infinity));
+            return Array.from({ length: N }, () => new Array(N).fill(Infinity));
         }
 
-        // 计算距离
-        function dist(from, to) {
-            return Math.pow(from[0] - to[0], 2) + Math.pow(from[1] - to[1], 2);
+        // 计算曼哈顿距离
+        function countPredictDist(from, to) {
+            return Math.abs(from[0] - to[0]) + Math.abs(from[1] - to[1]);
         }
 
         // 是否有效
@@ -343,39 +343,43 @@
 
             grid[from[0]][from[1]] = 0;
 
-            const queue = new MiniHeap([], (a, b) => a.steps - b.steps);
+            const queue = new PriorityQueue([], (a, b) => a.steps - b.steps);
 
-            const initialDist = dist(from, to);
-
+            // 开始点
             queue.push({
-                steps: initialDist,
                 pos: from,
+                steps: 0,
             });
 
             while (queue.size > 0) {
-                const { pos: currentPos } = queue.pop();
-                if (currentPos[0] === to[0] && currentPos[1] === to[1]) {
-                    return [grid[currentPos[0]][currentPos[1]], grid];
-                }
+                const peak = queue.pop();
+                /** 当前位置 */
+                const currPos = peak.pos;
+                /** 当前step */
+                const currSteps = peak.steps;
+                if (currPos[0] === to[0] && currPos[1] === to[1]) break;
                 for (const move of moves) {
-                    // 下一个要查找的位置
-                    const nextPos = [currentPos[0] + move[0], currentPos[1] + move[1]];
-                    if (!isValid(nextPos)) continue;
-                    // 到达next节点的steps
-                    const currentSteps = grid[currentPos[0]][currentPos[1]] + 1;
-                    if (currentSteps < grid[nextPos[0]][nextPos[1]]) {
-                        // 走到next节点 是不是耗费更少的steps
-                        grid[nextPos[0]][nextPos[1]] = currentSteps;
-                        // 预测的steps
-                        const predictSteps = dist(nextPos, to);
+                    /** 下一个节点位置 */
+                    const nextPos = [currPos[0] + move[0], currPos[1] + move[1]];
+                    if (!isValid(nextPos)) continue
+                    /** 预测距离 */
+                    const prediceDist = countPredictDist(nextPos, to);
+                    /** rankVal */
+                    const guideValue = prediceDist + currSteps + 1;
+                    /** 设置距离 */
+                    if (currSteps + 1 < grid[nextPos[0]][nextPos[1]]) {
+                        grid[nextPos[0]][nextPos[1]] = currSteps + 1;
+                        /** 加入 queue */
                         queue.push({
-                            steps: predictSteps,
                             pos: nextPos,
+                            steps: guideValue,
                         });
                     }
                 }
             }
+            return [grid[to[0]][to[1]], grid];
         }
+
 
         // === 渲染器 ===
         const gridEl = document.getElementById('grid');
