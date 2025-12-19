@@ -1,0 +1,12 @@
+{
+  "name": "data-structure-js-imple-",
+  "version": "1.0.0",
+  "description": "",
+  "main": "generate-tree.js",
+  "scripts": {
+    "build": "node generate-tree.js  "
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}
