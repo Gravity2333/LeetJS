@@ -30,3 +30,34 @@ const arr = [
 ];
 quickSort(0, arr.length - 1, arr);
 console.log(arr);
+
+function swap(index1, index2, list) {
+  if (index1 >= list.length || index2 >= list.length) return;
+  const temp = list[index1];
+  list[index1] = list[index2];
+  list[index2] = temp;
+}
+
+function quickSort(nums, left = 0, right = nums.length - 1) {
+  if (left > right) return [];
+  let i = left;
+  let j = right;
+  let pivot = nums[i];
+
+  while (i < j) {
+    // 先看右边
+    while (i < j && nums[j] >= pivot) {
+      j--;
+    }
+    swap(i, j, nums);
+    // 看左边
+    while (i < j && nums[i] <= pivot) {
+      i++;
+    }
+    swap(i, j, nums);
+  }
+
+  quickSort(nums, left, i - 1);
+  quickSort(nums, i + 1, right);
+  return nums;
+}

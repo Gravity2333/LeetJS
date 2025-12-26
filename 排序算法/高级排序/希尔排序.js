@@ -33,3 +33,30 @@ const arr = [
 ];
 shellSort(arr);
 console.log(arr);
+
+function shellSort(list) {
+  const len = list.length;
+  let gap = Math.trunc(len / 2);
+
+  while (gap >= 1) {
+    for (let i = gap; i < len; i++) {
+      const needInsertVal = list[i];
+      for (let j = i - gap; j >= i % gap; j -= gap) {
+        if (list[j] > needInsertVal) {
+          list[j + gap] = list[j];
+        } else {
+          list[j + gap] = needInsertVal;
+          break;
+        }
+
+        if (j === i % gap) {
+          list[j] = needInsertVal;
+        }
+      }
+    }
+
+    gap = Math.trunc(gap / 2);
+  }
+
+  return list;
+}
