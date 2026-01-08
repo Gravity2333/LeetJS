@@ -60,3 +60,54 @@ function maxPackageValue(packageWeiget, weights, values) {
 
 console.log(maxPackageValue(4, [2, 1, 3], [4, 2, 3])); //6
 console.log(maxPackageValue(10, [2, 2, 6, 5, 4], [6, 3, 5, 4, 6])); // 15
+
+/** 01 背包
+ * 递推公式含义 dp[i][j] 前 i 个物品 放入j容量背包 最大价值
+ * 递推公式 dp[i][j] = max(dp[i-1][j],dp[i-1][j-w[i]] + v[i])
+ * 初始化  第一列 dp[i][0] = 0 第一行 dp[0][j] = v[0] (j>=w[0])
+ * 遍历顺序 物品 1~n 容量 0~W
+ */
+
+function maxPackageValue(packageWeiget, weights, values) {
+  const dp = Array.from({ length: weights.length }, () =>
+    new Array(packageWeiget + 1).fill(0)
+  );
+  for (let i = 0; i < weights.length; i++) {
+    for (let j = 0; j <= packageWeiget; j++) {
+      if (j === 0) {
+        dp[i][0] = 0;
+      } else if (i === 0) {
+        dp[0][j] = weights[0] <= j ? values[0] : 0;
+      } else {
+        if (j < weights[i]) {
+          dp[i][j] = dp[i - 1][j];
+        } else {
+          dp[i][j] = Math.max(
+            dp[i - 1][j],
+            dp[i - 1][j - weights[i]] + values[i]
+          );
+        }
+      }
+    }
+  }
+  return dp;
+}
+
+function maxPackageValue(packageWeiget, weights, values) {
+  const dp = new Array(packageWeiget + 1).fill(0);
+
+  for (let i = 0; i < weights.length; i++) {
+    for (let j = packageWeiget; j >= 0; j--) {
+      if (j <= weights[i]) {
+        dp[j] = dp[j];
+      } else {
+        dp[j] = Math.max(dp[j], dp[j - weights[i]] + values[i]);
+      }
+    }
+  }
+
+  return dp.pop();
+}
+
+console.log(maxPackageValue(4, [2, 1, 3], [4, 2, 3])); //6
+console.log(maxPackageValue(10, [2, 2, 6, 5, 4], [6, 3, 5, 4, 6])); // 15
