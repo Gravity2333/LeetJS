@@ -31,7 +31,7 @@ class PriorityQueue1 {
   }
 
   _shiftUp(i) {
-    const parentIndex = Math.trunc((i - 1)/ 2);
+    const parentIndex = Math.trunc((i - 1) / 2);
     if (
       this.compare(this.array[parentIndex]?.priority, this.array[i]?.priority) >
       0
@@ -99,6 +99,35 @@ var topKFrequent = function (nums, k) {
   const results = [];
   for (let i = 0; i < k; i++) {
     results.push(priorityQueue.pop());
+  }
+
+  return results;
+};
+
+/**
+ * @param {number[]} nums
+ * @param {number} k
+ * @return {number[]}
+ */
+var topKFrequent = function (nums, k) {
+  const pq = new PriorityQueue1((a, b) => b - a);
+  const stat = {};
+  for (const num of nums) {
+    if (stat[num] !== void 0) {
+      stat[num]+=1;
+    } else {
+      stat[num] = 1;
+    }
+  }
+
+  Object.entries(stat).forEach(([num, cnt]) => {
+    pq.push(num, cnt);
+  });
+
+  const results = [];
+  for (let i = 0; i < k; i++) {
+    const r = pq.pop()
+    results.push(+r);
   }
 
   return results;

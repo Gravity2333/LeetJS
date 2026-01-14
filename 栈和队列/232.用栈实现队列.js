@@ -99,3 +99,50 @@ class MyQueue {
     return this.stack.length === 0;
   }
 }
+
+
+
+// -----
+
+
+
+var MyQueue = function() {
+    this.stack = []
+};
+
+/** 
+ * @param {number} x
+ * @return {void}
+ */
+MyQueue.prototype.push = function(x) {
+    this.stack.push(x)
+};
+
+/**
+ * @return {number}
+ */
+MyQueue.prototype.pop = function() {
+    const cache = []
+    while(this.stack.length > 1){
+      cache.push(this.stack.pop())
+    }
+    const res = this.stack.pop()
+    while(cache.length > 0){
+      this.stack.push(cache.pop())
+    }
+    return res
+};
+
+/**
+ * @return {number}
+ */
+MyQueue.prototype.peek = function() {
+    return this.stack[0]
+};
+
+/**
+ * @return {boolean}
+ */
+MyQueue.prototype.empty = function() {
+    return this.stack.length === 0
+};

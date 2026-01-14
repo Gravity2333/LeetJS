@@ -42,8 +42,8 @@
  */
 var isValid = function (s) {
   const stack = [];
-  for (let i =0;i<s.length;i++) {
-    const c = s[i]
+  for (let i = 0; i < s.length; i++) {
+    const c = s[i];
     switch (c) {
       case "(":
       case "[":
@@ -71,5 +71,47 @@ var isValid = function (s) {
     }
   }
 
-  return stack.length === 0 ;
+  return stack.length === 0;
+};
+
+/**
+ * @param {string} s
+ * @return {boolean}
+ */
+var isValid = function (s) {
+  const stack = [];
+
+  for (const c of s) {
+    switch (c) {
+      case "(": {
+        stack.push(c);
+        break;
+      }
+      case "[": {
+        stack.push(c);
+        break;
+      }
+      case "{": {
+        stack.push(c);
+        break;
+      }
+      case ")": {
+        const top = stack.pop();
+        if (top !== "(") return false;
+        break;
+      }
+      case "]": {
+         const top = stack.pop();
+        if (top !== "[") return false;
+        break;
+      }
+      case "}": {
+          const top = stack.pop();
+        if (top !== "{") return false;
+        break;
+      }
+    }
+  }
+
+  return stack.length === 0
 };

@@ -21,3 +21,18 @@ var removeDuplicates = function(s) {
     return stack.join('')
 };
 
+
+/**
+ * @param {string} s
+ * @return {string}
+ */
+var removeDuplicates = function(s) {
+    const stack = []
+    for(const c of s){
+        const res = stack.pop()
+        if(res === c) continue
+        stack.push(res)
+        stack.push(c)
+    }
+    return stack.join('')
+};
