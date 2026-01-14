@@ -53,7 +53,7 @@ var reverseWords = function (s) {
     }
   }
   // 去掉多余的
-  words = words.slice(0,slow)
+  words = words.slice(0, slow);
   let left = 0;
   let right = words.length - 1;
 
@@ -73,64 +73,89 @@ var reverseWords = function (s) {
 // 后反转整个字符串
 // 最后反转单词本身
 
+function reverse(s, start = 0, end = s.length - 1) {
+  if (s.length === 0 || start >= end) return s;
+  s = Array.isArray(s) ? s : Array.from(s);
+  let left = start;
+  let right = end;
+  while (right < s.length && left < right) {
+    const tmp = s[left];
+    s[left] = s[right];
+    s[right] = tmp;
 
-function reverse(s,start = 0,end = s.length - 1){
-    if(s.length ===0 ||start >= end) return s
-    s=Array.isArray(s) ? s : Array.from(s)
-    let left = start
-    let right = end
-    while(right < s.length && left < right){
-        const tmp = s[left]
-        s[left] = s[right]
-        s[right] = tmp 
-
-        left++
-        right--
-    }
-    return s
+    left++;
+    right--;
+  }
+  return s;
 }
 
 /**
  * @param {string} s
  * @return {string}
  */
-var reverseWords = function(s) {
-    if(s.length === 0)return s
-    // 转换成数组
-    s = Array.from(s) 
-    // 快慢指针去空格
-    let slow = -1
-    let fast = 0
-    while(fast < s.length){
-        if(s[fast] !== " "){
-            s[++slow] = s[fast]
-        }else{
-            if(s[slow] !== " " && slow !== -1){
-                // 保存一个空格
-                s[++slow] = s[fast]
-            }
-        }
-        fast++
+var reverseWords = function (s) {
+  if (s.length === 0) return s;
+  // 转换成数组
+  s = Array.from(s);
+  // 快慢指针去空格
+  let slow = -1;
+  let fast = 0;
+  while (fast < s.length) {
+    if (s[fast] !== " ") {
+      s[++slow] = s[fast];
+    } else {
+      if (s[slow] !== " " && slow !== -1) {
+        // 保存一个空格
+        s[++slow] = s[fast];
+      }
     }
-    // 后面部分截断
-    s = s.slice(0,s[slow] === " "?slow:slow+1)
-    // 反转字符串
-    s = reverse(s)
+    fast++;
+  }
+  // 后面部分截断
+  s = s.slice(0, s[slow] === " " ? slow : slow + 1);
+  // 反转字符串
+  s = reverse(s);
 
-    // 反转单词
-    slow = 0
-    while(slow < s.length){
-        if(s[slow] !== " "){
-            // 找到end
-            let wordEnd = slow
-            while(wordEnd < s.length && s[wordEnd] !== " ") wordEnd++
-            const next = wordEnd
-            s = reverse(s,slow,wordEnd-1)
-            slow = next
-        }else{
-            slow++
-        }
+  // 反转单词
+  slow = 0;
+  while (slow < s.length) {
+    if (s[slow] !== " ") {
+      // 找到end
+      let wordEnd = slow;
+      while (wordEnd < s.length && s[wordEnd] !== " ") wordEnd++;
+      const next = wordEnd;
+      s = reverse(s, slow, wordEnd - 1);
+      slow = next;
+    } else {
+      slow++;
     }
-    return s.join('')
+  }
+  return s.join("");
 };
 
+
+function reverse(s, start = 0, end = s.length - 1) {
+  if (s.length === 0 || start >= end) return s;
+  s = Array.isArray(s) ? s : Array.from(s);
+  let left = start;
+  let right = end;
+  while (right < s.length && left < right) {
+    const tmp = s[left];
+    s[left] = s[right];
+    s[right] = tmp;
+
+    left++;
+    right--;
+  }
+  return s;
+}
+
+/**
+ * @param {string} s
+ * @return {string}
+ */
+var reverseWords = function (s) {
+  s=s.trim()
+  s=s.split(' ').filter(f=>f)
+  return reverse(s).join(' ')
+};

@@ -35,3 +35,25 @@ var reverseStr = function (s, k) {
   /** 数组转换回字符串 */
   return arr.join("");
 };
+
+/**
+ * @param {string} s
+ * @param {number} k
+ * @return {string}
+ */
+var reverseStr = function (s, k) {
+  const arr = s.split('')
+  for (let start = 0; start < s.length; start += 2 * k) {
+    // from start to start + k
+    let left = start;
+    let right = start + k - 1;
+    while (left < right) {
+      const tmp = arr[left];
+      arr[left] = arr[right];
+      arr[right] = tmp;
+      left++;
+      right--;
+    }
+  }
+  return arr.join('')
+};
