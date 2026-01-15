@@ -116,5 +116,37 @@ var removeElements2 = function (head, val) {
     }
   }
 
-  return vNode.next
+  return vNode.next;
+};
+
+/**
+ * Definition for singly-linked list.
+ * function ListNode(val, next) {
+ *     this.val = (val===undefined ? 0 : val)
+ *     this.next = (next===undefined ? null : next)
+ * }
+ */
+/**
+ * @param {ListNode} head
+ * @param {number} val
+ * @return {ListNode}
+ */
+var removeElements = function (head, val) {
+  const virtual = {
+    val: "vritual node",
+    next: head,
+  };
+
+  let current = head;
+  let prev = virtual;
+  while (current !== null) {
+    if (current.val === val) {
+      prev.next = current.next;
+      current = current.next;
+    } else {
+      prev = prev.next;
+      current = current.next;
+    }
+  }
+  return virtual.next;
 };

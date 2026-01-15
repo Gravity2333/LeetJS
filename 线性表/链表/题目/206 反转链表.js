@@ -63,7 +63,7 @@ var reverseList = function (head) {
 };
 
 var reverseList = function (head) {
-  if(!head) return head
+  if (!head) return head;
   let slow = head;
   let fast = head.next;
   slow.next = null;
@@ -75,4 +75,48 @@ var reverseList = function (head) {
     fast = tmp;
   }
   return slow;
+};
+
+/**
+ * Definition for singly-linked list.
+ * function ListNode(val, next) {
+ *     this.val = (val===undefined ? 0 : val)
+ *     this.next = (next===undefined ? null : next)
+ * }
+ */
+/** 递归
+ * @param {ListNode} head
+ * @return {ListNode}
+ */
+var reverseList = function (head) {
+  if (!head) return null;
+  if (head.next === null) {
+    return head;
+  }
+  const next = head.next;
+  head.next = null;
+  const newHead = reverseList(next);
+  next.next = head;
+  return newHead;
+};
+
+/** 循环
+ * @param {ListNode} head
+ * @return {ListNode}
+ */
+var reverseList = function (head) {
+  if (!head) return null;
+  if (head.next === null) {
+    return head;
+  }
+  let prev = null;
+  let curr = head;
+
+  while (curr !== null) {
+    const tmp = curr.next;
+    curr.next = prev;
+    prev = curr;
+    curr = tmp;
+  }
+  return prev
 };

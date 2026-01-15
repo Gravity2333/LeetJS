@@ -36,3 +36,27 @@ var swapPairs = function(head) {
 
     return head
 };
+
+/**
+ * Definition for singly-linked list.
+ * function ListNode(val, next) {
+ *     this.val = (val===undefined ? 0 : val)
+ *     this.next = (next===undefined ? null : next)
+ * }
+ */
+/**
+ * @param {ListNode} head
+ * @return {ListNode}
+ */
+var swapPairs = function(head) {
+    // 一个指针 每次交换 当前节点和后面节点的值 注意 只换值 不动节点
+    // 一次向后jump 2次
+    let current = head
+    while(current && current.next){
+        const tmp = current.val
+        current.val = current.next.val
+        current.next.val = tmp
+        current = current.next.next
+    }
+    return head
+};
