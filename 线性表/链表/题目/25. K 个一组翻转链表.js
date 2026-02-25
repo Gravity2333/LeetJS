@@ -42,3 +42,45 @@ var reverseKGroup = function (head, k) {
 
   return virtualHead.next;
 };
+
+// ----------------------------------------
+function hasK(head, k) {
+  let curr = head;
+  for (let i = 0; i < k; i++) {
+    curr = curr.next;
+    if (!curr) return false;
+  }
+  return true;
+}
+
+function reverseK(head, k) {
+  let curr = head;
+  let next = curr.next;
+  for (let i = 0; i < k - 1; i++) {
+    const tmp = next.next;
+    next.next = curr;
+    curr = next;
+    next = tmp;
+  }
+  head.next = next;
+  return curr;
+}
+
+/**
+ * @param {ListNode} head
+ * @param {number} k
+ * @return {ListNode}
+ */
+var reverseKGroup = function (head, k) {
+  const v = {
+    next: head,
+  };
+
+  let current = v;
+
+  while (hasK(current, k)) {
+    current = reverseK(current,k)
+  }
+
+  return v.next;
+};

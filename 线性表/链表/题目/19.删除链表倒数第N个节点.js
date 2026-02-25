@@ -79,8 +79,8 @@ var removeNthFromEnd = function (head, n) {
     slowPtr = slowPtr.next;
   }
 
-  slowPrev.next = slowPtr.next
-  return virtualHead.next
+  slowPrev.next = slowPtr.next;
+  return virtualHead.next;
 };
 
 /**
@@ -95,25 +95,57 @@ var removeNthFromEnd = function (head, n) {
  * @param {number} n
  * @return {ListNode}
  */
-var removeNthFromEnd = function(head, n) {
-    const virtual= {
-      val: 'VIRTUAL NODE',
-      next: head,
-    }
+var removeNthFromEnd = function (head, n) {
+  const virtual = {
+    val: "VIRTUAL NODE",
+    next: head,
+  };
 
-    let prev = virtual
-    let slow = head
-    let fast = head
-    for(let i=0;i<n;i++){
-      fast= fast.next
-    }
+  let prev = virtual;
+  let slow = head;
+  let fast = head;
+  for (let i = 0; i < n; i++) {
+    fast = fast.next;
+  }
 
-    while(fast !== null){
-      fast = fast.next
-      prev = slow
-      slow = slow.next
-    }
+  while (fast !== null) {
+    fast = fast.next;
+    prev = slow;
+    slow = slow.next;
+  }
 
-    prev.next = slow.next
-    return virtual.next
+  prev.next = slow.next;
+  return virtual.next;
+};
+
+/** REVIEW 快慢指针
+ * fast 先移动n次
+ * slow fast 同时移动
+ * 当fast到达末尾 slow恰好在倒数n
+ * @param {ListNode} head
+ * @param {number} n
+ * @return {ListNode}
+ */
+var removeNthFromEnd = function (head, n) {
+  const v = {
+    next: head,
+  };
+
+  let prev = v;
+  let slow = head;
+  let fast = head;
+
+  for (let i = 0; i < n; i++) {
+    fast = fast.next;
+  }
+
+  while (fast) {
+    fast = fast.next;
+    prev = slow;
+    slow = slow.next;
+  }
+
+  prev.next = slow.next;
+
+  return v.next;
 };

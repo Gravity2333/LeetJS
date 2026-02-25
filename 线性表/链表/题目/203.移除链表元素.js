@@ -150,3 +150,30 @@ var removeElements = function (head, val) {
   }
   return virtual.next;
 };
+
+// review
+/**
+ * @param {ListNode} head
+ * @param {number} val
+ * @return {ListNode}
+ */
+var removeElements = function (head, val) {
+  const v = {
+    next: head,
+  };
+
+  let current = head;
+  let prev = v;
+
+  while (current) {
+    if (current.val === val) {
+      prev.next = current.next;
+      current = current.next;
+    } else {
+      prev = current;
+      current = current.next;
+    }
+  }
+
+  return v.next;
+};

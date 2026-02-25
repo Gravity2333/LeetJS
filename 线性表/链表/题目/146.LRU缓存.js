@@ -17,8 +17,8 @@ var LRUCache = function (capacity) {
     next: null,
   };
   // 连接
-  this.head.next = this.tail
-  this.tail.prev = this.head
+  this.head.next = this.tail;
+  this.tail.prev = this.head;
 };
 
 LRUCache.prototype.move2Head = function (node) {
@@ -83,3 +83,73 @@ LRUCache.prototype.put = function (key, value) {
  * var param_1 = obj.get(key)
  * obj.put(key,value)
  */
+
+class LRUCache {
+  constructor(capacity) {
+    this.capacity = capacity;
+    this.map = new Map();
+    this.head = {
+      val: "virtual Head",
+      next: null,
+      prev: null,
+    };
+    this.tail = {
+      val: "virtual Tail",
+      next: null,
+      prev: null,
+    };
+    this.head.next = this.tail;
+    this.tail.prev = this.head;
+    this.size = 0;
+  }
+
+  move2Head(node) {
+    node.prev.next = node.next;
+    node.next.prev = node.prev;
+
+    node.next = this.head.next;
+    node.next.prev = node;
+
+    node.prev = this.head;
+    this.head.next = node;
+  }
+
+  get(key) {
+    if (this.map.has(key)) {
+      const node = this.map.get(key);
+      this.move2Head(node);
+      return node.val;
+    }
+
+    return -1;
+  }
+
+  put(key, val) {
+    if (this.map.has(key)) {
+      const node = this.map.get(key);
+      this.move2Head(node);
+      node.val = val;
+    } else {
+      const node = {
+        key,
+        val,
+        next: null,
+        prev: null,
+      };
+      if (this.size >= this.capacity) {
+        const needDelNode = this.tail.prev;
+        this.tail.prev = needDelNode.prev;
+        this.tail.prev.next = this.tail;
+        this.size--;
+        this.map.delete(needDelNode.key);
+      }
+
+      node.next = this.head.next;
+      node.next.prev = node;
+      node.prev = this.head;
+      this.head.next = node;
+      this.size++;
+      this.map.set(key, node);
+    }
+  }
+}

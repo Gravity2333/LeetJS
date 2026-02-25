@@ -24,25 +24,24 @@ var getIntersectionNode = function (headA, headB) {
       if (!chanedA) {
         chanedA = true;
         currentA = headB;
-      }else{
-         return null
+      } else {
+        return null;
       }
     }
     if (currentB.next) {
       currentB = currentB.next;
     } else {
-       if (!chanedB) {
+      if (!chanedB) {
         chanedB = true;
         currentB = headA;
-      }else{
-         return null
+      } else {
+        return null;
       }
     }
   }
 
-  return currentA
+  return currentA;
 };
-
 
 // 链表节点定义
 function ListNode(val) {
@@ -77,3 +76,34 @@ b3.next = node8;
 /** headA / headB */
 const headA = a1;
 const headB = b1;
+
+/**
+ * 思路 AB同时走 走到末尾之后 从另外一个链表的开始走 如果有交点 一定能相交 因为两个节点走的路程是一样的
+ * 如果不想交 那么最终一定都走向null
+ * @param {ListNode} headA
+ * @param {ListNode} headB
+ * @return {ListNode}
+ */
+var getIntersectionNode = function (headA, headB) {
+  let currA = headA;
+  let currB = headB;
+
+  let resetA = false
+  let resetB = false
+  while (currA && currB && currA !== currB) {
+    currA = currA.next;
+    currB = currB.next;
+
+    if (currA === null&&!resetA) {
+      currA = headB;
+      resetA = true
+    }
+
+    if (currB === null&&!resetB) {
+      currB = headA;
+      resetB = true
+    }
+  }
+
+  return  currA
+};

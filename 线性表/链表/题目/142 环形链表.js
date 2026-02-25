@@ -46,22 +46,20 @@ var detectCycle = function (head) {
 var detectCycle = function (head) {
   let slow = head;
   let fast = head;
-  while (1) {
-    slow = slow?.next;
-    fast = fast?.next?.next;
 
-    if (!fast) return null;
-    if (slow === fast) {
-      break;
-    }
-  }
-
-  fast = head;
-  while (1) {
-    if (fast === slow) {
-      return slow;
-    }
+  do {
+    fast = fast?.next;
     fast = fast?.next;
     slow = slow?.next;
+  } while (fast && slow !== fast);
+
+  if (!fast) return null;
+
+  fast = head;
+  while (fast !== slow) {
+    fast = fast.next;
+    slow = slow.next;
   }
+
+  return fast;
 };

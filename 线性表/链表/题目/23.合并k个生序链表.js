@@ -10,7 +10,7 @@
  * @return {ListNode}
  */
 var mergeKLists = function (lists) {
-    lists = lists.filter((list) => !!list);
+  lists = lists.filter((list) => !!list);
   const results = {
     val: "VIRTUAL HEAD",
     next: null,
@@ -37,4 +37,39 @@ var mergeKLists = function (lists) {
   }
 
   return results.next;
+};
+
+/**
+ * @param {ListNode[]} lists
+ * @return {ListNode}
+ */
+var mergeKLists = function (lists) {
+  const v = {
+    next: null,
+  };
+  let current = v;
+  while (lists.length > 0) {
+    let minValue = Infinity;
+    let minIndex = -1;
+    for (let i = 0; i < lists.length; i++) {
+      const ptr = lists[i];
+      if (!ptr) continue;
+      if (ptr.val < minValue) {
+        minValue = ptr.val;
+        minIndex = i;
+      }
+    }
+
+    if (minIndex >= 0) {
+      const minPtr = lists[minIndex];
+      current = current.next = {
+        val: minPtr.val,
+        next: null,
+      };
+      lists[minIndex] = minPtr.next;
+    }
+    lists = lists.filter(f=>f)
+  }
+
+  return v.next;
 };
