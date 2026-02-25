@@ -78,10 +78,45 @@ var fourSumCount = function (nums1, nums2, nums3, nums4) {
     for (let j = 0; j < nums4.length; j++) {
       const sum = -(nums3[i] + nums4[j]);
       if (map.has(sum)) {
-        cnt+=map.get(sum);
+        cnt += map.get(sum);
       }
     }
   }
 
   return cnt;
+};
+
+/**
+ * @param {number[]} nums1
+ * @param {number[]} nums2
+ * @param {number[]} nums3
+ * @param {number[]} nums4
+ * @return {number}
+ */
+var fourSumCount = function (nums1, nums2, nums3, nums4) {
+  let cnt = 0;
+  let map = new Map();
+  // 先把前面2个数的所有组合的可能性统计出来
+  for (let i = 0; i < nums1.length; i++) {
+    for (let j = 0; j < nums2.length; j++) {
+      const sum = nums1[i] + nums2[j];
+      if (map.has(sum)) {
+        map.set(sum, map.get(sum) + 1);
+      } else {
+        map.set(sum, 1);
+      }
+    }
+  }
+
+  // 后两个数字
+  for (let i = 0; i < nums3.length; i++) {
+    for (let j = 0; j < nums4.length; j++) {
+      const target = -(nums3[i] + nums4[j]);
+      if (map.has(target)) {
+        cnt += map.get(target);
+      }
+    }
+  }
+
+  return cnt
 };

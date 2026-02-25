@@ -11,7 +11,8 @@
 var longestConsecutive = function (nums) {
   const set = new Set(nums);
   let maxLen = 0;
-  for (const num of set) { // 扫描set 即可 官方的测试用例有大量的重复元素
+  for (const num of set) {
+    // 扫描set 即可 官方的测试用例有大量的重复元素
     if (!set.has(num - 1)) {
       // 是起点
       let _currentLen = 0;
@@ -21,9 +22,34 @@ var longestConsecutive = function (nums) {
         next++;
       }
       if (_currentLen > maxLen) {
-        maxLen = _currentLen
+        maxLen = _currentLen;
       }
     }
   }
   return maxLen;
+};
+
+// review
+var longestConsecutive = function (nums) {
+  const set = new Set(nums);
+  let max = 0;
+  for (let num of set) {
+    if (!set.has(num - 1)) {
+      // start finding
+      let len = 0;
+      let curr = num;
+      while (1) {
+        if (set.has(curr)) {
+          len++;
+          curr += 1;
+        } else {
+          if (len > max) {
+            max = len;
+          }
+          break;
+        }
+      }
+    }
+  }
+  return max;
 };

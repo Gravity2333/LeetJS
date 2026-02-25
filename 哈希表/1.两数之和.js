@@ -55,14 +55,14 @@ var twoSum = function (nums, target) {
   return -1;
 };
 
-/** 方法2 双指着
+/** 方法2双指针 ❌
  * @param {number[]} nums
  * @param {number} target
  * @return {number[]}
  */
 var twoSum = function (nums, target) {
   if (nums.length === 0) return -1;
-  nums = nums.toSorted((a,b) => a-b);
+  nums = nums.toSorted((a, b) => a - b);
   let left = 0;
   let right = nums.length - 1;
 
@@ -77,4 +77,18 @@ var twoSum = function (nums, target) {
     }
   }
   return -1;
+};
+
+// review
+var twoSum = function (nums, target) {
+  const map = new Map();
+  for (let i = 0; i < nums.length; i++) {
+    const leftNum = target - nums[i];
+    if (map.has(leftNum)) {
+      return [i, map.get(leftNum)];
+    } else {
+      map.set(nums[i], i);
+    }
+  }
+  return -1
 };

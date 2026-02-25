@@ -31,7 +31,7 @@ var groupAnagrams = function (strs) {
       if (!map.has(c)) {
         map.set(c, 1);
       } else {
-        map.set(c,map.get(c) + 1);
+        map.set(c, map.get(c) + 1);
       }
     }
 
@@ -53,5 +53,26 @@ var groupAnagrams = function (strs) {
     }
   }
 
-  return results.map(result => result.arr)
+  return results.map((result) => result.arr);
+};
+
+/**
+ * @param {string[]} strs
+ * @return {string[][]}
+ */
+var groupAnagrams = function (strs) {
+  const map = new Map();
+  for (const str of strs) {
+    const cntList = new Array(26).fill(0);
+    for (let c of str) {
+      cntList[c.charCodeAt() - "a".charCodeAt()]++;
+    }
+    const freKey = cntList.join("-");
+    if (!map.has(freKey)) {
+      map.set(freKey, [str]);
+    } else {
+      map.set(freKey, [...map.get(freKey), str]);
+    }
+  }
+  return Array.from(map.values())
 };
