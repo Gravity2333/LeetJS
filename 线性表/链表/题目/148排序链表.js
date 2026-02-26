@@ -74,5 +74,68 @@ var sortList = function (head) {
     currentRight = currentRight.next;
   }
 
-  return newHead.next
+  return newHead.next;
 };
+
+/**
+ * 链表交换麻烦 考虑归并排序
+ * @param {ListNode} head
+ * @return {ListNode}
+ */
+var sortList = function (head) {
+  if (!head) return null;
+  if (!head?.next) return head;
+  const [splitLeft, splitRight] = splitLink(head);
+  let left = sortList(splitLeft);
+  let right = sortList(splitRight);
+  const newHead = {
+    next: null,
+  };
+  let newCurrent = newHead;
+
+  while (left && right) {
+    if (left.val < right.val) {
+      newCurrent = newCurrent.next = {
+        val: left.val,
+        next: null,
+      };
+      left = left.next;
+    } else {
+      newCurrent = newCurrent.next = {
+        val: right.val,
+        next: null,
+      };
+      right = right.next;
+    }
+  }
+
+  while (left) {
+    newCurrent = newCurrent.next = {
+      val: left.val,
+      next: null,
+    };
+    left = left.next;
+  }
+
+  while (right) {
+    newCurrent = newCurrent.next = {
+      val: right.val,
+      next: null,
+    };
+    right = right.next;
+  }
+  return newHead.next;
+};
+
+/** 从中点 切分链表 */
+function splitLink(head) {
+  let slow = head;
+  let fast = head;
+  while (fast?.next && fast?.next?.next) {
+    fast = fast.next?.next;
+    slow = slow?.next;
+  }
+  const right = slow.next;
+  slow.next = null;
+  return [head, right];
+}

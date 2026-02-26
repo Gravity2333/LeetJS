@@ -44,13 +44,13 @@ var reverseKGroup = function (head, k) {
 };
 
 // ----------------------------------------
-function hasK(head, k) {
+function nextK(head, k) {
   let curr = head;
   for (let i = 0; i < k; i++) {
-    curr = curr.next;
-    if (!curr) return false;
+    curr = curr?.next;
+    if (!curr) return null;
   }
-  return true;
+  return curr;
 }
 
 function reverseK(head, k) {
@@ -76,10 +76,12 @@ var reverseKGroup = function (head, k) {
     next: head,
   };
 
-  let current = v;
-
-  while (hasK(current, k)) {
-    current = reverseK(current,k)
+  let current = head;
+  let prev = v;
+  while (current) {
+    prev.next = reverseK(current, k);
+    prev = nextK(prev, k);
+    current = prev.next;
   }
 
   return v.next;
