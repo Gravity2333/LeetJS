@@ -104,13 +104,57 @@ MyStack.prototype.pop = function () {
  * @return {number}
  */
 MyStack.prototype.top = function () {
-  if(this.queue.length ===0) return void 0
-  return this.queue[this.queue.length-1]
+  if (this.queue.length === 0) return void 0;
+  return this.queue[this.queue.length - 1];
 };
 
 /**
  * @return {boolean}
  */
 MyStack.prototype.empty = function () {
-  return this.queue.length === 0
+  return this.queue.length === 0;
+};
+
+// 000-----
+
+var MyStack = function () {
+  this.queue = [];
+};
+
+/**
+ * @param {number} x
+ * @return {void}
+ */
+MyStack.prototype.push = function (x) {
+  this.queue.push(x);
+};
+
+/**
+ * @return {number}
+ */
+MyStack.prototype.pop = function () {
+  const cache = [];
+  while (this.queue.length > 1) {
+    cache.push(this.queue.shift());
+  }
+  const popElem = this.queue.shift();
+  while (cache.length > 0) {
+    this.queue.push(cache.shift());
+  }
+  return popElem;
+};
+
+/**
+ * @return {number}
+ */
+MyStack.prototype.top = function () {
+  if (this.queue.length === 0) return void 0;
+  return this.queue[this.queue.length - 1];
+};
+
+/**
+ * @return {boolean}
+ */
+MyStack.prototype.empty = function () {
+  return this.queue.length === 0;
 };

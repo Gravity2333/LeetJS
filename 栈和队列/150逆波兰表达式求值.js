@@ -77,5 +77,49 @@ var evalRPN = function (tokens) {
         stack.push(token);
     }
   }
-  return +stack.pop()
+  return +stack.pop();
+};
+
+/**
+ * @param {string[]} tokens
+ * @return {number}
+ */
+var evalRPN = function (tokens) {
+  const stack = [];
+  for (const token of tokens) {
+    switch (token) {
+      case "+":
+        (() => {
+          let right = +stack.pop();
+          let left = +stack.pop();
+          stack.push(left + right);
+        })();
+        break;
+      case "-":
+        (() => {
+          let right = +stack.pop();
+          let left = +stack.pop();
+          stack.push(left - right);
+        })();
+        break;
+      case "*":
+        (() => {
+          let right = +stack.pop();
+          let left = +stack.pop();
+          stack.push(left * right);
+        })();
+        break;
+      case "/":
+        (() => {
+          let right = +stack.pop();
+          let left = +stack.pop();
+          stack.push(Math.trunc(left / right));
+        })();
+        break;
+      default:
+        stack.push(token);
+        break;
+    }
+  }
+  return +stack.pop();
 };

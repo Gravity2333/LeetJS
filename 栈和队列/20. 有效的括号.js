@@ -101,15 +101,43 @@ var isValid = function (s) {
         break;
       }
       case "]": {
-         const top = stack.pop();
+        const top = stack.pop();
         if (top !== "[") return false;
         break;
       }
       case "}": {
-          const top = stack.pop();
+        const top = stack.pop();
         if (top !== "{") return false;
         break;
       }
+    }
+  }
+
+  return stack.length === 0;
+};
+
+/**
+ * @param {string} s
+ * @return {boolean}
+ */
+var isValid = function (s) {
+  const stack = [];
+  for (const c of s) {
+    switch (c) {
+      case "(":
+      case "[":
+      case "{":
+        stack.push(c);
+        break;
+      case ")":
+        if (stack.pop() !== "(") return false;
+        break;
+      case "]":
+        if (stack.pop() !== "[") return false;
+        break;
+      case "}":
+        if (stack.pop() !== "{") return false;
+        break;
     }
   }
 

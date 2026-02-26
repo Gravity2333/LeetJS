@@ -34,10 +34,6 @@
 // 假设所有操作都是有效的 （例如，一个空的队列不会调用 pop 或者 peek 操作）
 // 原理 2个 Stack 出 queue的时候 先保存到另外一个stack
 
-
-
-
-
 // 步骤如下
 // ___________
 // |a b c d <- push
@@ -53,7 +49,6 @@
 // ___________   ___________
 // |  b c d  pop<- b c d   |
 // -----------   -----------
-
 
 class MyQueue {
   constructor() {
@@ -100,49 +95,86 @@ class MyQueue {
   }
 }
 
-
-
 // -----
 
-
-
-var MyQueue = function() {
-    this.stack = []
+var MyQueue = function () {
+  this.stack = [];
 };
 
-/** 
+/**
  * @param {number} x
  * @return {void}
  */
-MyQueue.prototype.push = function(x) {
-    this.stack.push(x)
+MyQueue.prototype.push = function (x) {
+  this.stack.push(x);
 };
 
 /**
  * @return {number}
  */
-MyQueue.prototype.pop = function() {
-    const cache = []
-    while(this.stack.length > 1){
-      cache.push(this.stack.pop())
-    }
-    const res = this.stack.pop()
-    while(cache.length > 0){
-      this.stack.push(cache.pop())
-    }
-    return res
+MyQueue.prototype.pop = function () {
+  const cache = [];
+  while (this.stack.length > 1) {
+    cache.push(this.stack.pop());
+  }
+  const res = this.stack.pop();
+  while (cache.length > 0) {
+    this.stack.push(cache.pop());
+  }
+  return res;
 };
 
 /**
  * @return {number}
  */
-MyQueue.prototype.peek = function() {
-    return this.stack[0]
+MyQueue.prototype.peek = function () {
+  return this.stack[0];
 };
 
 /**
  * @return {boolean}
  */
-MyQueue.prototype.empty = function() {
-    return this.stack.length === 0
+MyQueue.prototype.empty = function () {
+  return this.stack.length === 0;
+};
+
+var MyQueue = function () {
+  this.stack = [];
+};
+
+/**
+ * @param {number} x
+ * @return {void}
+ */
+MyQueue.prototype.push = function (x) {
+  this.stack.push(x);
+};
+
+/**
+ * @return {number}
+ */
+MyQueue.prototype.pop = function () {
+  const cache = [];
+  while (this.stack.length > 0) {
+    cache.push(this.stack.pop());
+  }
+  const first = cache.pop();
+  while (cache.length > 0) {
+    this.stack.push(cache.pop());
+  }
+  return first;
+};
+
+/**
+ * @return {number}
+ */
+MyQueue.prototype.peek = function () {
+  return this.stack[0];
+};
+
+/**
+ * @return {boolean}
+ */
+MyQueue.prototype.empty = function () {
+  return this.stack.length === 0;
 };
