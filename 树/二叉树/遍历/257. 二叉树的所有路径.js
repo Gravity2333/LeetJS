@@ -69,3 +69,32 @@ var binaryTreePaths = function (root, currentPaths = [], results = []) {
   }
   return results.map((result) => result.join("->"));
 };
+
+/**
+ * Definition for a binary tree node.
+ * function TreeNode(val, left, right) {
+ *     this.val = (val===undefined ? 0 : val)
+ *     this.left = (left===undefined ? null : left)
+ *     this.right = (right===undefined ? null : right)
+ * }
+ */
+/**
+ * @param {TreeNode} root
+ * @return {string[]}
+ */
+var binaryTreePaths = function (root, currentPath = [], results = []) {
+  if (!root) return [];
+  if (!root.left && !root.right) {
+    /** 收集 */
+    results.push([...currentPath, root.val].join("->"));
+  }
+  // 先序
+  if (root.left) {
+    binaryTreePaths(root.left, [...currentPath, root.val], results);
+  }
+
+  if (root.right) {
+    binaryTreePaths(root.right, [...currentPath, root.val], results);
+  }
+  return results
+};

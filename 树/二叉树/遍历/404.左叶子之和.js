@@ -68,3 +68,25 @@ var sumOfLeftLeaves = function (root, type) {
   const rightLeftLeaves = root.right ? sumOfLeftLeaves(root.right, "right") : 0;
   return leftLeftLeaves + rightLeftLeaves;
 };
+
+/**
+ * Definition for a binary tree node.
+ * function TreeNode(val, left, right) {
+ *     this.val = (val===undefined ? 0 : val)
+ *     this.left = (left===undefined ? null : left)
+ *     this.right = (right===undefined ? null : right)
+ * }
+ */
+/**
+ * @param {TreeNode} root
+ * @return {number}
+ */
+var sumOfLeftLeaves = function (root) {
+  if (!root) return 0;// 空节点
+  if (root?.left && !root?.left?.left && !root?.left?.right) {
+    // 有左叶子的节点
+    return root?.left.val + sumOfLeftLeaves(root.right);
+  }
+  // 没有左叶子的节点
+  return sumOfLeftLeaves(root.left) + sumOfLeftLeaves(root.right);
+};

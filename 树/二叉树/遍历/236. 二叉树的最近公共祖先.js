@@ -14,25 +14,59 @@
 //    a.同时在一边 此时当前节点也是最深根节点 但是必须要 继续向上找到根节点 如果没有其他路径包含pq 就能确定
 //    b.这条边只包含 pq中一个 需要继续向上找才能确定
 
-
 /**
  * @param {TreeNode} root
  * @param {TreeNode} p
  * @param {TreeNode} q
  * @return {TreeNode}
  */
-var lowestCommonAncestor = function(root, p, q) {
-         if(!root) return root
-         if(root.val === p.val || root.val === q.val) return root
-    const maybeTargetFromLeft = lowestCommonAncestor(root.left,p,q)
-    const maybeTargetFromRight = lowestCommonAncestor(root.right,p,q)
+var lowestCommonAncestor = function (root, p, q) {
+  if (!root) return root;
+  if (root.val === p.val || root.val === q.val) return root;
+  const maybeTargetFromLeft = lowestCommonAncestor(root.left, p, q);
+  const maybeTargetFromRight = lowestCommonAncestor(root.right, p, q);
 
-    if(maybeTargetFromLeft&&maybeTargetFromRight){
-        return root // 找到了
-    }
+  if (maybeTargetFromLeft && maybeTargetFromRight) {
+    return root; // 找到了
+  }
 
-      if(maybeTargetFromLeft){return maybeTargetFromLeft}
-        if(maybeTargetFromRight){return maybeTargetFromRight}
-    
-    return null
+  if (maybeTargetFromLeft) {
+    return maybeTargetFromLeft;
+  }
+  if (maybeTargetFromRight) {
+    return maybeTargetFromRight;
+  }
+
+  return null;
+};
+
+/**
+ * 明确每一层递归的作用
+ *
+ * @param {TreeNode} root
+ * @param {TreeNode} p
+ * @param {TreeNode} q
+ * @return {TreeNode}
+ */
+var lowestCommonAncestor = function (node, p, q, root = node) {
+  if (!node) {
+  return [false, false];
+  }
+
+  let currentIsP = node.val === p;
+  let currentIsQ = node.val === q;
+
+  const [leftHasP, leftHasQ] = lowestCommonAncestor(node.left,p, q,root);
+  const [rightHasP, rightHasQ] = lowestCommonAncestor(node.right,p, q,root);
+
+  const hasP = currentIsP || leftHasP || rightHasP
+  const hasQ = currentIsQ || leftHasQ || rightHasQ
+
+  if (hasP && hasQ) {
+    return node;
+  }
+
+  if(node === root) return root
+
+  return [hasP, hasQ];
 };

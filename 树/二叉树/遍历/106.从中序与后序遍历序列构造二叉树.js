@@ -15,7 +15,7 @@
 var buildTree = function (
   inorder,
   postorder,
-  node = { val: void 0, left: null, right: null }
+  node = { val: void 0, left: null, right: null },
 ) {
   const postValue = postorder.pop();
   if (undefined === postValue) return node;
@@ -99,11 +99,33 @@ var buildTree = function (inorder, postorder) {
     val: top,
     left: buildTree(
       inorder.slice(0, topPosInOrder),
-      postorder.slice(0, topPosInOrder)
+      postorder.slice(0, topPosInOrder),
     ),
     right: buildTree(
       inorder.slice(topPosInOrder + 1),
-      postorder.slice(topPosInOrder)
+      postorder.slice(topPosInOrder),
     ),
+  };
+};
+
+/**
+ * @param {number[]} postorder
+ * @param {number[]} inorder
+ * @return {TreeNode}
+ */
+var buildTree = function (inorder, postorder) {
+  if (postorder.length === 0 || inorder.length === 0) {
+    return null;
+  }
+  const rootVal = postorder.pop();
+  const rootIndexInOrder = inorder.indexOf(rootVal);
+  const leftInorder = inorder.slice(0, rootIndexInOrder);
+  const rightInorder = inorder.slice(rootIndexInOrder + 1);
+  const leftPostOrder = postorder.slice(0, leftInorder.length);
+  const rightPostOrder = postorder.slice(leftInorder.length);
+  return {
+    val: rootVal,
+    left: buildTree(leftInorder, leftPostOrder),
+    right: buildTree(rightInorder, rightPostOrder),
   };
 };

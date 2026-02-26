@@ -17,3 +17,17 @@ var preorderTraversal = function (root, results = []) {
   preorderTraversal(root.right,results);
   return results;
 };
+
+
+
+/**
+ * @param {TreeNode} root
+ * @return {number[]}
+ */
+var preorderTraversal = function (root, results = []) {
+  if(!root) return []
+  results.push(root.val)
+  preorderTraversal(root.left,results)
+  preorderTraversal(root.right,results)
+  return results
+};

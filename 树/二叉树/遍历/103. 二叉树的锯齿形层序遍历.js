@@ -84,7 +84,7 @@ const tree = {
  * @return {number[][]}
  */
 var zigzagLevelOrder = function (root) {
-  if(!root) return []
+  if (!root) return [];
   const queue = [root];
   const results = [];
   let layerNum = 1;
@@ -115,4 +115,51 @@ var zigzagLevelOrder = function (root) {
     shouldReverse = !shouldReverse;
   }
   return results;
+};
+
+/**
+ * Definition for a binary tree node.
+ * function TreeNode(val, left, right) {
+ *     this.val = (val===undefined ? 0 : val)
+ *     this.left = (left===undefined ? null : left)
+ *     this.right = (right===undefined ? null : right)
+ * }
+ */
+/**
+ * @param {TreeNode} root
+ * @return {number[][]}
+ */
+var zigzagLevelOrder = function (root) {
+  if (!root) return [];
+  const queue = [root];
+  let currentLayerCnt = 1;
+  const results = []
+  let reverse = false;
+  while (queue.length > 0) {
+    let wipLayerCnt = 0;
+    const wipResult = [];
+
+    for (let i = 0; i < currentLayerCnt; i++) {
+      const node = queue.shift();
+      if (reverse) {
+        wipResult.unshift(node.val);
+      } else {
+        wipResult.push(node.val);
+      }
+
+      if (node.left) {
+        wipLayerCnt++;
+        queue.push(node.left);
+      }
+
+      if (node.right) {
+        wipLayerCnt++;
+        queue.push(node.right);
+      }
+    }
+    currentLayerCnt = wipLayerCnt;
+    reverse = !reverse
+    results.push(wipResult)
+  }
+  return results
 };

@@ -16,7 +16,7 @@ var getMinimumDifference = function (
   context = {
     minDiffVal: Number.MAX_VALUE,
     prev: null,
-  }
+  },
 ) {
   if (!root) return null;
 
@@ -54,13 +54,57 @@ var getMinimumDifference = function (
     minValue: Infinity,
     prev: Infinity,
     curr: null,
-  }
+  },
 ) {
   if (!root) return 0;
   getMinimumDifference(root.left, context);
   context.curr = root.val;
-  context.minValue = Math.min(context.minValue, Math.abs(context.curr-context.prev));
+  context.minValue = Math.min(
+    context.minValue,
+    Math.abs(context.curr - context.prev),
+  );
   context.prev = context.curr;
   getMinimumDifference(root.right, context);
   return context.minValue;
 };
+
+/**
+ * Definition for a binary tree node.
+ * function TreeNode(val, left, right) {
+ *     this.val = (val===undefined ? 0 : val)
+ *     this.left = (left===undefined ? null : left)
+ *     this.right = (right===undefined ? null : right)
+ * }
+ */
+/**
+ * @param {TreeNode} root
+ * @return {number}
+ */
+var getMinimumDifference = function (root) {
+  let minDistance = Infinity;
+  inorder(root, {
+    prev: null,
+    callback: (prev, curr) => {
+      if (!prev) return;
+      const dist = Math.abs(prev?.val - curr?.val);
+      if (dist < minDistance) {
+        minDistance = dist;
+      }
+    },
+  });
+  return minDistance;
+};
+
+function inorder(
+  root,
+  context = {
+    prev: null,
+    callback,
+  },
+) {
+  if (!root) return;
+  inorder(root.left, context);
+  context.callback(context.prev, root);
+  context.prev = root;
+  inorder(root.right, context);
+}

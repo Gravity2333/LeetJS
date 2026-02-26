@@ -18,3 +18,16 @@ var postorderTraversal = function(root,results = []) {
 
     return results
 };
+
+
+/**
+ * @param {TreeNode} root
+ * @return {number[]}
+ */
+var postorderTraversal = function(root,result = []) {
+    if(!root) return []
+    postorderTraversal(root.left,result)
+    postorderTraversal(root.right,result)
+    result.push(root.val)
+    return result
+};
