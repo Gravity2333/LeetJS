@@ -44,28 +44,30 @@ var reverseKGroup = function (head, k) {
 };
 
 // ----------------------------------------
-function nextK(head, k) {
-  let curr = head;
-  for (let i = 0; i < k; i++) {
-    curr = curr?.next;
-    if (!curr) return null;
+function canReverse(head, k) {
+  let current = head;
+  for (let i = 0; i < k - 1; i++) {
+    if (!current) break;
+    current = current.next;
   }
-  return curr;
+
+  return !!current;
 }
 
 function reverseK(head, k) {
-  let curr = head;
-  let next = curr.next;
+  let prev = head;
+  let wip = prev?.next;
+  if (!wip) return [prev,prev];
+  let tmp;
   for (let i = 0; i < k - 1; i++) {
-    const tmp = next.next;
-    next.next = curr;
-    curr = next;
-    next = tmp;
+    tmp = wip.next;
+    wip.next = prev;
+    prev = wip;
+    wip = tmp;
   }
-  head.next = next;
-  return curr;
+  head.next = wip;
+  return [prev, head];
 }
-
 /**
  * @param {ListNode} head
  * @param {number} k
@@ -76,12 +78,11 @@ var reverseKGroup = function (head, k) {
     next: head,
   };
 
-  let current = head;
   let prev = v;
-  while (current) {
-    prev.next = reverseK(current, k);
-    prev = nextK(prev, k);
-    current = prev.next;
+  while (canReverse(prev.next, k)) {
+    const [start, end] = reverseK(prev.next, k);
+    prev.next = start;
+    prev = end;
   }
 
   return v.next;

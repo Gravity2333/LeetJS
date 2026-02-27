@@ -190,3 +190,21 @@ var combinationSum4 = function (nums, target) {
 
   return dp.pop().pop();
 };
+
+
+/**
+ * @param {number[]} nums
+ * @param {number} target
+ * @return {number}
+ */
+var combinationSum4 = function(nums, target) {
+    const dp = Array.from({ length: nums.length + 1}, ()=>new Array(target+1).fill(0))
+    dp[0][0] = 1
+    for(let j=0;j<=target;j++){
+      for(let i=1;i<=nums.length;i++){
+        if(j < nums[i-1]) dp[i][j] = dp[i-1][j]
+        else dp[i][j] = dp[i-1][j] + dp[nums.length][j-nums[i-1]]
+      }
+    }
+    return dp[nums.length][target]
+};

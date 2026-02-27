@@ -38,7 +38,7 @@
  */
 var findMaxForm = function (strs, m, n) {
   const dp = Array.from({ length: m + 1 }, () =>
-    Array.from({ length: n + 1 }, () => 0)
+    Array.from({ length: n + 1 }, () => 0),
   );
 
   for (let k = 0; k < strs.length; k++) {
@@ -100,7 +100,7 @@ var findMaxForm = function (strs, m, n) {
   });
   strsCnt.unshift([0, 0]);
   const dp = Array.from({ length: strsCnt.length }, () =>
-    Array.from({ length: m + 1 }, () => new Array(n + 1).fill(0))
+    Array.from({ length: m + 1 }, () => new Array(n + 1).fill(0)),
   );
 
   for (let k = 1; k < strsCnt.length; k++) {
@@ -109,13 +109,61 @@ var findMaxForm = function (strs, m, n) {
         if (strsCnt[k][0] > i || strsCnt[k][1] > j) {
           dp[k][i][j] = dp[k - 1][i][j];
         } else {
-          dp[k][i][j] =Math.max(
-            dp[k - 1][i][j] ,
-            1 +
-            dp[k - 1][i - strsCnt[k][0]][j - strsCnt[k][1]])
+          dp[k][i][j] = Math.max(
+            dp[k - 1][i][j],
+            1 + dp[k - 1][i - strsCnt[k][0]][j - strsCnt[k][1]],
+          );
         }
       }
     }
   }
-  return dp.pop().pop().pop()
+  return dp.pop().pop().pop();
+};
+
+/**
+ * @param {string[]} strs
+ * @param {number} m
+ * @param {number} n
+ * @return {number}
+ */
+var findMaxForm = function (strs, m, n) {
+  // collect
+  const zeros = [];
+  const ones = [];
+
+  for (const str of strs) {
+    let zero = 0;
+    let one = 0;
+    for (const c of str) {
+      if (c == "0") zero++;
+      else one++;
+    }
+    zeros.push(zero);
+    ones.push(one);
+  }
+
+  // 对于前k个数字 恰好满足0的容量为i 1的容量为j，最多有dp[k][i][j]个物品
+  // dp[k][i][j] = MAX(dp[k-1][i][j], 1+dp[k-1][i-zeros[k]][j-ones[k]])
+  // 初始化 增加一层 在什么都不选的情况下，无法满足，都是0
+
+  const dp = Array.from({ length: strs.length+1 }, () =>
+    Array.from({ length: m + 1 }, () => new Array(n + 1).fill(0)),
+  );
+
+  for (let k = 1; k <= strs.length; k++) {
+    for (let i = 0; i <= m; i++) {
+      for (let j = 0; j <= n; j++) {
+        if (i < zeros[k-1] || j < ones[k-1]) {
+          dp[k][i][j] = dp[k - 1][i][j];
+        } else {
+          dp[k][i][j] = Math.max(
+            dp[k - 1][i][j],
+            1 + dp[k - 1][i - zeros[k-1]][j - ones[k-1]],
+          );
+        }
+      }
+    }
+  }
+
+  return dp[strs.length][m][n];
 };

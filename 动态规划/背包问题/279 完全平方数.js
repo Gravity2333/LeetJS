@@ -24,7 +24,7 @@ var numSquares = function (n) {
 
   // dp
   const dp = Array.from({ length: objects.length }, () =>
-    new Array(n + 1).fill(Infinity)
+    new Array(n + 1).fill(Infinity),
   );
 
   // 初始化
@@ -45,29 +45,54 @@ var numSquares = function (n) {
 /**
  * 这个题目的关键点是 要自己收集物品！
  * 最少数量 初始化Infinity
- * 
+ *
  */
 /**
  * @param {number} n
  * @return {number}
  */
 var numSquares = function (n) {
-  const goods = []
-  for(let i =1;i*i<=n;i++){
-    goods.push(i*i)
+  const goods = [];
+  for (let i = 1; i * i <= n; i++) {
+    goods.push(i * i);
   }
 
-  const dp = new Array(n+1).fill(Infinity)
-  // 0个物品 填满 0-n 最少几种 
-  dp[0] = 0
-  for(let i =0;i<goods.length ;i++){
-    for(let j=0;j<=n;j++){
-      if(goods[i] > j){
-        dp[j] = dp[j]
-      }else{
-        dp[j] = Math.min(dp[j],1+dp[j-goods[i]])
+  const dp = new Array(n + 1).fill(Infinity);
+  // 0个物品 填满 0-n 最少几种
+  dp[0] = 0;
+  for (let i = 0; i < goods.length; i++) {
+    for (let j = 0; j <= n; j++) {
+      if (goods[i] > j) {
+        dp[j] = dp[j];
+      } else {
+        dp[j] = Math.min(dp[j], 1 + dp[j - goods[i]]);
       }
     }
   }
-  return dp.pop()
+  return dp.pop();
+};
+
+/** REVIEW
+ * @param {number} n
+ * @return {number}
+ */
+var numSquares = function (n) {
+  // 收集物品
+  const nums = [];
+  for (let i = 1; i * i <= n; i++) {
+    nums.push(i * i);
+  }
+  const dp = new Array(n+1).fill(Infinity)
+  dp[0] = 0
+
+  for(let i=1;i<=nums.length;i++){
+    for(let j=0;j<=n;j++){
+      if(j < nums[i-1]){
+        dp[j] =dp[j]
+      }else{
+        dp[j] = Math.min(dp[j],1+dp[j-nums[i-1]])
+      }
+    }
+  }
+  return dp[n]
 };

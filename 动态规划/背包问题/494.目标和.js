@@ -51,7 +51,7 @@ var findTargetSumWays = function (nums, target) {
   }
   /** 加一层 什么物品都没有的情况 此时凑出 容量为0也有一种 */
   const dp = Array.from({ length: nums.length + 1 }, () =>
-    new Array(packageCapacaity + 1).fill(0)
+    new Array(packageCapacaity + 1).fill(0),
   );
   dp[0][0] = 1;
   for (let i = 1; i <= nums.length; i++) {
@@ -105,4 +105,45 @@ var findTargetSumWays = function (nums, target) {
   }
 
   return dp.pop();
+};
+
+/**
+ * left = ( target + sum ) / 2
+ * 找到一个集合 让其和恰好为  ( target + sum ) / 2 求组合数
+ * i,j 对于前 i 个数组 容量为j的情况下 恰好装满时的组合数为  ( target + sum ) / 2
+ *
+ * dp[i][j] = dp[i-1][j] + dp[i][j-nums[i]]
+ *
+ * 初始化 需要注意题目含义 dp[0][0] 第0个数 满足0 有1种方法 其他的第一行都是0 因为0不能满足非0
+ * 第一列 如果不是0则为1 即 不选 如果是0 则为2 选和不选
+ *
+ * 这样初始化太麻烦了，我们考虑增加一个虚拟行 0 表示没有任何元素的情况，此时第一行第一列为1 其他都是0
+ *
+ * 顺序 二维数组 i -> j
+ * @param {number[]} nums
+ * @param {number} target
+ * @return {number}
+ */
+var findTargetSumWays = function (nums, target) {
+  const sum = nums.reduce((prev, curr) => prev + curr, 0);
+  const dest = (sum + target) / 2;
+  if (dest < 0 || Math.trunc(dest) !== dest) return 0;
+
+  const dp = Array.from({ length: nums.length + 1 }, () =>
+    new Array(dest + 1).fill(0),
+  );
+
+  dp[0][0] = 1;
+
+  for (let i = 1; i <= nums.length; i++) {
+    for (let j = 0; j <= dest; j++) {
+      if (j < nums[i - 1]) {
+        dp[i][j] = dp[i - 1][j];
+      } else {
+        dp[i][j] = dp[i - 1][j] + dp[i - 1][j - nums[i - 1]];
+      }
+    }
+  }
+
+  return dp[nums.length][dest];
 };

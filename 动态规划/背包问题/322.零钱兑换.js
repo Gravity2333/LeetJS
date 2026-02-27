@@ -40,7 +40,7 @@
  */
 var coinChange = function (coins, amount) {
   const dp = Array.from({ length: coins.length }, () =>
-    new Array(amount + 1).fill(Infinity)
+    new Array(amount + 1).fill(Infinity),
   );
   for (let i = 0; i < coins.length; i++) {
     for (let j = 0; j <= amount; j++) {
@@ -83,9 +83,9 @@ var coinChange = function (coins, amount) {
  */
 var coinChangeMax = function (coins, amount) {
   const dp = Array.from({ length: coins.length }, () =>
-    new Array(amount + 1).fill(Infinity)
+    new Array(amount + 1).fill(Infinity),
   );
-  dp[0] = 0
+  dp[0] = 0;
   for (let i = 0; i < coins.length; i++) {
     for (let j = 0; j <= amount; j++) {
       if (i === 0) {
@@ -138,13 +138,13 @@ var coinChange = function (coins, amount) {
  * 注意 这是一个完全背包问题
  * dp[j]: 前 i 个硬币 能恰好找零 最少数量为 dp[j]
  * dp[j] = min(dp[j] , 1+dp[j-coins[i]])
- * 
+ *
  * 初始化有讲究:
  * 求 最小值 dp初始化为最大值 表示 不可找零
- * 第一行初始化 
+ * 第一行初始化
  * dp[0] = 0 容量为0 用第一个coin找零 有0种 算是可以找零
  * 其余的 j % coin[i] ===0 ? j / coin[i]: Infinity
- * 
+ *
  * 完全背包 从前往后即可
  */
 
@@ -154,13 +154,13 @@ var coinChange = function (coins, amount) {
  * @return {number}
  */
 var coinChange = function (coins, amount) {
-  if(!amount) return 0
+  if (!amount) return 0;
   const dp = new Array(amount + 1).fill(Infinity);
-  dp[0]=0
+  dp[0] = 0;
   // 初始化
   for (let i = coins[0]; i <= amount; i++) {
     if (i % coins[0] === 0) {
-      dp[i] = i /  coins[0];
+      dp[i] = i / coins[0];
     }
   }
 
@@ -175,4 +175,29 @@ var coinChange = function (coins, amount) {
   }
   const res = dp.pop();
   return res === Infinity ? -1 : res;
+};
+
+//  review
+/** 注意区分 求最小值初始化不能用0 无法构成就用Infinity代替
+ * @param {number[]} coins
+ * @param {number} amount
+ * @return {number}
+ */
+var coinChange = function (coins, amount) {
+  const dp = Array.from({ length: coins.length + 1 }, () =>
+    new Array(amount + 1).fill(Infinity),
+  );
+  // 没有任何硬币的情况下 组合0 用0个硬币
+  dp[0][0] = 0; // 其他第一行的都是Infinity 即无法组合
+
+  for (let i = 1; i <= coins.length; i++) {
+    for (let j = 0; j <= amount; j++) {
+      if (j < coins[i - 1]) dp[i][j] = dp[i - 1][j];
+      else {
+        dp[i][j] = Math.min(dp[i - 1][j], 1 + dp[i][j - coins[i - 1]]);
+      }
+    }
+  }
+
+  return dp[coins.length][amount] === Infinity ? -1 :  dp[coins.length][amount]
 };

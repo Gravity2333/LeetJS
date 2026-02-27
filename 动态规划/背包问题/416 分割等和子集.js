@@ -41,7 +41,7 @@ var canPartition = function (nums) {
     return false;
   }
   const dp = Array.from({ length: nums.length }, () =>
-    new Array(half + 1).fill(0)
+    new Array(half + 1).fill(0),
   );
   for (let i = 0; i < nums.length; i++) {
     // 物品
@@ -63,7 +63,7 @@ var canPartition = function (nums) {
         } else {
           dp[i][j] = Math.max(
             /** 不取 i */ dp[i - 1][j],
-            /** 取 i 价值 */ nums[i] + dp[i - 1][j - nums[i]]
+            /** 取 i 价值 */ nums[i] + dp[i - 1][j - nums[i]],
           );
         }
       }
@@ -98,7 +98,7 @@ var canPartition = function (nums) {
       } else {
         dp[j] = Math.max(
           /** 不取 i */ dp[j],
-          /** 取 i 价值 */ nums[i] + dp[j - nums[i]]
+          /** 取 i 价值 */ nums[i] + dp[j - nums[i]],
         );
       }
     }
@@ -107,29 +107,92 @@ var canPartition = function (nums) {
   return dp[half] === half;
 };
 
-
 /** 关键点！ 当重量 和 价值一样的时候 对于每个 j 其最大价值 为 j  */
 /**
  * @param {number[]} nums
  * @return {boolean}
  */
-var canPartition = function(nums) {
-    const sum = nums.reduce((prev,curr) => prev+ curr,0)
-    if(sum % 2 !== 0) return false
-    const target = sum / 2
+var canPartition = function (nums) {
+  const sum = nums.reduce((prev, curr) => prev + curr, 0);
+  if (sum % 2 !== 0) return false;
+  const target = sum / 2;
 
-    nums.unshift(0)
-    const dp = Array.from({ length: nums.length},()=>new Array(target + 1).fill(0))
+  nums.unshift(0);
+  const dp = Array.from({ length: nums.length }, () =>
+    new Array(target + 1).fill(0),
+  );
 
-    for(let i=1;i<nums.length;i++){
-      for(let j=0;j<=target;j++){
-        if(nums[i] > j){
-          dp[i][j] = dp[i-1][j] 
-        }else{
-           dp[i][j] = Math.max(dp[i-1][j], dp[i-1][j-nums[i]]+ nums[i])
-        }
+  for (let i = 1; i < nums.length; i++) {
+    for (let j = 0; j <= target; j++) {
+      if (nums[i] > j) {
+        dp[i][j] = dp[i - 1][j];
+      } else {
+        dp[i][j] = Math.max(dp[i - 1][j], dp[i - 1][j - nums[i]] + nums[i]);
       }
     }
+  }
 
-    return dp.pop().pop() === target
+  return dp.pop().pop() === target;
+};
+
+/**
+ * @param {number[]} nums
+ * @return {boolean}
+ */
+var canPartition = function (nums) {
+  const sum = nums.reduce((prev, curr) => prev + curr, 0);
+  if (sum % 2 !== 0) return false;
+  const target = sum / 2;
+
+  // 转化成 物品 容量 = 价值
+  // 当容量为target的时候 价值最多也是target 如果价值恰好是target 说明可以恰好装满
+
+  const dp = Array.from({ length: nums.length }, () =>
+    new Array(target + 1).fill(0),
+  );
+
+  for (let j = nums[0]; j <= target; j++) {
+    dp[0][j] = nums[0];
+  }
+
+  for (let i = 1; i < nums.length; i++) {
+    for (let j = 1; j <= target; j++) {
+      if (j < nums[i]) {
+        dp[i][j] = dp[i - 1][j];
+      } else {
+        dp[i][j] = Math.max(dp[i - 1][j], nums[i] + dp[i - 1][j - nums[i]]);
+      }
+    }
+  }
+
+  return dp[nums.length - 1][target] === target;
+};
+
+// 一维
+/**
+ * @param {number[]} nums
+ * @return {boolean}
+ */
+var canPartition = function (nums) {
+  const sum = nums.reduce((prev, curr) => prev + curr, 0);
+  if (sum % 2 !== 0) return false;
+  const target = sum / 2;
+
+  const dp = new Array(target + 1).fill(0);
+  // 0号物品 在j 0->target初始化
+  for (let j = nums[0]; j <= target; j++) {
+    dp[j] = nums[0];
+  }
+
+  for (let i = 1; i < nums.length; i++) {
+    for (let j = target; j >= 0; j--) {
+      if (j < nums[i]) {
+        dp[j] = dp[j];
+      } else {
+        dp[j] = Math.max(dp[j], nums[i] + dp[j - nums[i]]);
+      }
+    }
+  }
+
+  return dp[target] === target
 };

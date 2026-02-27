@@ -30,7 +30,7 @@
 
 function maxPackageValue(packageWeiget, weights, values) {
   const dp = Array.from({ length: weights.length }, () =>
-    new Array(packageWeiget + 1).fill(0)
+    new Array(packageWeiget + 1).fill(0),
   );
 
   // 处理 第一行 选第一个物品
@@ -49,7 +49,7 @@ function maxPackageValue(packageWeiget, weights, values) {
         // 装得下 分2种情况
         dp[i][j] = Math.max(
           dp[i - 1][j],
-          values[i] + dp[i - 1][j - weights[i]]
+          values[i] + dp[i - 1][j - weights[i]],
         );
       }
     }
@@ -70,7 +70,7 @@ console.log(maxPackageValue(10, [2, 2, 6, 5, 4], [6, 3, 5, 4, 6])); // 15
 
 function maxPackageValue(packageWeiget, weights, values) {
   const dp = Array.from({ length: weights.length }, () =>
-    new Array(packageWeiget + 1).fill(0)
+    new Array(packageWeiget + 1).fill(0),
   );
   for (let i = 0; i < weights.length; i++) {
     for (let j = 0; j <= packageWeiget; j++) {
@@ -84,7 +84,7 @@ function maxPackageValue(packageWeiget, weights, values) {
         } else {
           dp[i][j] = Math.max(
             dp[i - 1][j],
-            dp[i - 1][j - weights[i]] + values[i]
+            dp[i - 1][j - weights[i]] + values[i],
           );
         }
       }
@@ -107,6 +107,66 @@ function maxPackageValue(packageWeiget, weights, values) {
   }
 
   return dp.pop();
+}
+
+console.log(maxPackageValue(4, [2, 1, 3], [4, 2, 3])); //6
+console.log(maxPackageValue(10, [2, 2, 6, 5, 4], [6, 3, 5, 4, 6])); // 15
+
+// review
+// 递推公式意义  重量 前i个物品 在最大重量为j的情况下 最高价值 dp[i][j]
+// 递推公式 dp[i][j] = MAX(dp[i-1][j],value[i] + dp[i-1][j-weight[i]])
+// 初始化 dp[0][0] = 0
+// 顺序 i -> j
+function maxPackageValue(packageWeiget, weights, values) {
+  const dp = Array.from({ length: weights.length }, () =>
+    new Array(packageWeiget + 1).fill(0),
+  );
+  // 物品价值为0 第一列都是0
+  // 0 号物品 只有在 容量大于物品重量的时候 才有价值
+  for (let j = weights[0]; j <= packageWeiget; j++) {
+    dp[0][j] = values[0];
+  }
+  for (let i = 1; i < weights.length; i++) {
+    for (let j = 1; j <= packageWeiget; j++) {
+      if (j < weights[i]) {
+        dp[i][j] = dp[i - 1][j];
+      } else {
+        dp[i][j] = Math.max(
+          dp[i - 1][j],
+          values[i] + dp[i - 1][j - weights[i]],
+        );
+      }
+    }
+  }
+
+  return dp[weights.length - 1][packageWeiget];
+}
+
+console.log(maxPackageValue(4, [2, 1, 3], [4, 2, 3])); //6
+console.log(maxPackageValue(10, [2, 2, 6, 5, 4], [6, 3, 5, 4, 6])); // 15
+
+// review 一维
+// 递推公式意义  重量 前i个物品 在最大重量为j的情况下 最高价值 dp[i][j]
+// 递推公式 dp[j] = MAX(dp[j],value[i] + dp[j-weight[i]])
+// 初始化 dp[0] = 0
+// 顺序 i -> j j反向
+function maxPackageValue(packageWeiget, weights, values) {
+  const dp = new Array(packageWeiget + 1).fill(0);
+  // 0 号物品 只有在 容量大于物品重量的时候 才有价值
+  for (let j = weights[0]; j <= packageWeiget; j++) {
+    dp[j] = values[0];
+  }
+  for (let i = 1; i < weights.length; i++) {
+    for (let j = packageWeiget; j >= 0; j--) {
+      if (j < weights[i]) {
+        dp[j] = dp[j];
+      } else {
+        dp[j] = Math.max(dp[j], values[i] + dp[j - weights[i]]);
+      }
+    }
+  }
+
+  return dp[packageWeiget];
 }
 
 console.log(maxPackageValue(4, [2, 1, 3], [4, 2, 3])); //6

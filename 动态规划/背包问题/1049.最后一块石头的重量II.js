@@ -22,7 +22,7 @@ var lastStoneWeightII = function (stones) {
       } else {
         dp[j] = Math.max(
           /** 不选 */ dp[j],
-          /** 选 */ stones[i] + dp[j - stones[i]]
+          /** 选 */ stones[i] + dp[j - stones[i]],
         );
       }
     }
@@ -55,6 +55,35 @@ var lastStoneWeightII = function (stones) {
     }
   }
 
-  const groupMax = dp.pop()
+  const groupMax = dp.pop();
   return Math.abs(sum - groupMax) - groupMax;
+};
+
+/**
+ * 关键点是什么？
+ * 关键点是 你要想到 把石头分成2组 其中一组的重量接近中间值 => 拆分等和子集问题 => 背包问题
+ * @param {number[]} stones
+ * @return {number}
+ */
+var lastStoneWeightII = function (stones) {
+  const sum = stones.reduce((prev, curr) => prev + curr, 0);
+  const target = Math.trunc(sum / 2);
+
+  const dp = new Array(target+1).fill(0)
+  for(let j= stones[0];j<=target;j++){
+    dp[j] = stones[0]
+  }
+
+  for(let i=1;i<stones.length;i++){
+    for(let j=target;j>=0;j--){
+      if(j < stones[i]) dp[j] = dp[j]
+      else{
+        dp[j] = Math.max(dp[j],stones[i] + dp[j-stones[i]])
+      }
+    }
+  }
+
+  const maxValue = dp[target]
+
+  return Math.abs((sum-maxValue) - maxValue)
 };
