@@ -68,7 +68,7 @@ var nextGreaterElements = function (nums) {
 var nextGreaterElements = function (nums) {
   const stack = [];
   const results = new Array(nums.length).fill(-1);
-  for (let i = 0; i < 2*nums.length.length; i++) {
+  for (let i = 0; i < 2 * nums.length.length; i++) {
     const modIndex = i % nums.length;
     while (stack.length > 0 && nums[stack[stack.length - 1]] < nums[modIndex]) {
       const lastIndex = stack.pop();
@@ -76,5 +76,29 @@ var nextGreaterElements = function (nums) {
     }
     stack.push(modIndex);
   }
+  return results;
+};
+
+/**
+ * @param {number[]} nums
+ * @return {number[]}
+ */
+var nextGreaterElements = function (nums) {
+  const results = new Array(nums.length).fill(-1);
+  const stack = [];
+
+  for (let i = 0; i < 2 * nums.length; i++) {
+    const index = i % nums.length;
+    if (stack.length === 0 || nums[stack[stack.length - 1]] >= nums[index]) {
+      stack.push(index);
+    } else {
+      while (stack.length > 0 && nums[stack[stack.length - 1]] < nums[index]) {
+        const prevIndex = stack.pop();
+        results[prevIndex] = nums[index];
+      }
+      stack.push(index);
+    }
+  }
+
   return results
 };

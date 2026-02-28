@@ -55,5 +55,58 @@ var dailyTemperatures = function (temperatures) {
     }
     stack.push(i);
   }
+  return results;
+};
+
+/** 下一个更高温度出现在几天后
+ * @param {number[]} temperatures
+ * @return {number[]}
+ */
+var dailyTemperatures = function (temperatures) {
+  const results = new Array(temperatures.length).fill(0);
+  const stack = [];
+  for (let i = 0; i < temperatures.length; i++) {
+    if (
+      stack.length === 0 ||
+      temperatures[stack[stack.length - 1]] >= temperatures[i]
+    ) {
+      stack.push(i);
+    } else {
+      while (temperatures[i] > temperatures[stack[stack.length - 1]]) {
+        const prevIndex = stack.pop();
+        results[prevIndex] = i - prevIndex;
+      }
+      stack.push(i);
+    }
+  }
+  return results;
+};
+
+/** 对nums2 计算更大的元素
+ * @param {number[]} nums1
+ * @param {number[]} nums2
+ * @return {number[]}
+ */
+var nextGreaterElement = function (nums1, nums2) {
+  const map = new Map();
+  const stack = [];
+
+  for (let i = 0; i < nums2.length; i++) {
+    if (stack.length === 0 || stack[stack.length - 1] >= nums2[i]) {
+      stack.push(nums2[i]);
+    } else {
+      while (stack.length > 0 && stack[stack.length - 1] < nums2[i]) {
+        const prev = stack.pop();
+        map.set(prev, nums2[i]);
+      }
+      stack.push(nums2[i]);
+    }
+  }
+  const results = new Array(nums1.length).fill(-1)
+  for(let i = 0; i < nums1.length; i++){
+    if(map.has(nums1[i])){
+      results[i] = map.get(nums1[i])
+    }
+  }
   return results
 };

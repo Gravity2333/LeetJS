@@ -70,3 +70,37 @@ var largestRectangleArea = function (heights) {
 
   return max;
 };
+
+
+/**
+ * 思路明确
+ * 一个柱 最多能 左右 扩展到 更小的柱子位置 所以要用单调递减stack
+ * @param {number[]} heights
+ * @return {number}
+ */
+var largestRectangleArea = function(heights) {
+    let maxArea = 0 
+    const stack = []
+    heights.push(0)
+    heights.unshift(0)
+
+    for(let i=0;i<heights.length;i++){
+      if(stack.length ===0 || heights[stack[stack.length-1]] <= heights[i]){
+        stack.push(i)
+      }else{
+        while(stack.length >0 &&  heights[stack[stack.length-1]] > heights[i]){
+          let prevIndex = stack.pop()
+          if(stack.length === 0) break;
+          let leftIndex = stack[stack.length-1]
+          let rightIndex = i
+          const bottom = rightIndex - leftIndex - 1
+          const area = bottom * heights[prevIndex]
+          if(area > maxArea){
+            maxArea = area
+          }
+        }
+         stack.push(i)
+      }
+    }
+    return maxArea
+};

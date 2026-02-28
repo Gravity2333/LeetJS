@@ -71,3 +71,34 @@ var trap = function (height) {
   }
   return areas;
 };
+
+/**
+ * @param {number[]} height
+ * @return {number}
+ */
+var trap = function (height) {
+  const stack = [];
+  let cnt = 0;
+  for (let i = 0; i < height.length; i++) {
+    if (stack.length === 0 || height[stack[stack.length - 1]] >= height[i]) {
+      stack.push(i);
+    } else {
+      while (stack.length > 0 && height[stack[stack.length - 1]] < height[i]) {
+        const prevIndex = stack.pop();
+        if (stack.length === 0) break;
+        const leftIndex = stack[stack.length - 1];
+        const rightIndex = i;
+
+        const bottomLen = rightIndex - leftIndex - 1;
+        const h = Math.min(
+          height[leftIndex] - height[prevIndex],
+          height[rightIndex] - height[prevIndex],
+        );
+
+        cnt += bottomLen * h;
+      }
+      stack.push(i);
+    }
+  }
+  return cnt
+};
