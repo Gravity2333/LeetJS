@@ -3,8 +3,8 @@
  * dp[i][j] = (grid[i-1][j] === 1 ?dp[i-1][j] : 0) + (grid[i][j-1] === 1 ?dp[i][j-1] : 0)
  * 初始化 i = 0 grid[0][j] === 0 ? 1 : 后面的都是0 j同理
  * 先列 后 行
- * 
- * 
+ *
+ *
  * 考虑目标为1的情况
  */
 
@@ -13,9 +13,10 @@
  * @return {number}
  */
 var uniquePathsWithObstacles = function (obstacleGrid) {
-  if(obstacleGrid[obstacleGrid.length-1][obstacleGrid[0].length-1] === 1) return 0
+  if (obstacleGrid[obstacleGrid.length - 1][obstacleGrid[0].length - 1] === 1)
+    return 0;
   const dp = Array.from({ length: obstacleGrid.length }, () =>
-    new Array(obstacleGrid[0]?.length).fill(0)
+    new Array(obstacleGrid[0]?.length).fill(0),
   );
 
   let j = 0;
@@ -38,5 +39,38 @@ var uniquePathsWithObstacles = function (obstacleGrid) {
     }
   }
 
-  return dp[obstacleGrid.length-1][obstacleGrid[0].length-1]
+  return dp[obstacleGrid.length - 1][obstacleGrid[0].length - 1];
+};
+
+/**
+ * @param {number[][]} obstacleGrid
+ * @return {number}
+ */
+var uniquePathsWithObstacles = function (obstacleGrid) {
+  const dp = Array.from({ length: obstacleGrid.length }, () =>
+    new Array(obstacleGrid[0].length).fill(0),
+  );
+  for (let j = 0; j < obstacleGrid[0].length; j++) {
+    if (obstacleGrid[0][j] !== 1) {
+      dp[0][j] = 1;
+    } else {
+      break;
+    }
+  }
+  for (let i = 0; i < obstacleGrid.length; i++) {
+    if (obstacleGrid[i][0] !== 1) {
+      dp[i][0] = 1;
+    } else {
+      break;
+    }
+  }
+  for (let i = 1; i < obstacleGrid.length; i++) {
+    for (let j = 1; j < obstacleGrid[i].length; j++) {
+      if (obstacleGrid[i][j] === 1) dp[i][j] = 0;
+      else {
+        dp[i][j] = dp[i - 1][j] + dp[i][j - 1];
+      }
+    }
+  }
+  return dp[obstacleGrid.length - 1][obstacleGrid[0].length - 1];
 };

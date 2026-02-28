@@ -31,16 +31,43 @@
  */
 
 var wordBreak = function (s, wordDict) {
-  const dp = new Array(s.length+1).fill(false);
+  const dp = new Array(s.length + 1).fill(false);
   dp[0] = true;
 
   for (let i = 1; i <= s.length; i++) {
     for (let dict of wordDict) {
       if (s.slice(0, i + 1).endsWith(dict)) {
-        dp[i+1] = dp[i - dict.length +1];
+        dp[i + 1] = dp[i - dict.length + 1];
       }
     }
   }
 
   return dp[s.length];
+};
+
+/** i 结尾的单词的后缀是否能在dict中找到dp[i]
+ *  dp[i] = 找得到 ? dp[i- dictLen ]:false
+ * @param {string} s
+ * @param {string[]} wordDict
+ * @return {boolean}
+ */
+var wordBreak = function (s, wordDict) {
+  const dp = new Array(s.length).fill(false);
+  for (let i = 0; i < s.length; i++) {
+    const str = s.slice(0, i + 1);
+    for (const d of wordDict) {
+      if (str.endsWith(d)) {
+        if (d.length === str.length) {
+          dp[i] = true;
+          break;
+        } else {
+          dp[i] = dp[i - d.length];
+          if(dp[i]){
+            break
+          }
+        }
+      }
+    }
+  }
+  return dp.pop();
 };
