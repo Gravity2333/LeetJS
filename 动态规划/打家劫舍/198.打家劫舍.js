@@ -34,3 +34,21 @@ var rob = function (nums) {
 
   return dp.pop();
 };
+
+/** dp[i] 前i个房间 可以偷的最大值
+ *  dp[i] = Max(dp[i-1],nums[i] + dp[i-2])
+ *  dp[0] = nums[0]
+ *  dp[1] = MAX(nums[0],nums[1])
+ * @param {number[]} nums
+ * @return {number}
+ */
+var rob = function (nums) {
+  const dp = new Array(nums.length).fill(0);
+  dp[0] = nums[0] || 0;
+  dp[1] = Math.max(nums[0] || 0, nums[1] || 0);
+
+  for(let i = 2;i<nums.length;i++){
+    dp[i] = Math.max(dp[i-1],nums[i] + dp[i-2])
+  }
+  return dp[nums.length-1]
+};

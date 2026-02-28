@@ -24,3 +24,13 @@ var rob = function(nums) {
     if(nums.length ===1) return nums[0]
     return Math.max(robImpl(nums.slice(1)),robImpl(nums.slice(0,nums.length-1)))
 };
+
+
+/** 环形 可以拆分为 偷第一家 和 不偷第一家
+ * 偷 rob(0,-1)
+ * 不偷 rob(1,)
+ */
+var rob = function(nums) {
+    if(nums.length ===1) return nums[0]
+    return Math.max(robImpl(nums.slice(1)),robImpl(nums.slice(0,nums.length-1)))
+};

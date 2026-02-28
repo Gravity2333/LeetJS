@@ -46,7 +46,7 @@ var maxProfit = function (prices) {
     /** 第 i 天持有 */
     dp[i][0] = Math.max(
       /** 保持持有 */ dp[i - 1][0],
-      /** 第i天买入 */ -prices[i]
+      /** 第i天买入 */ -prices[i],
     );
 
     /** 第 i 天不持有 */
@@ -54,9 +54,35 @@ var maxProfit = function (prices) {
       /** 保持不持有 */
       dp[i - 1][1],
       /** 第i天卖出 */
-      dp[i - 1][0] + prices[i]
+      dp[i - 1][0] + prices[i],
     );
   }
 
   return Math.max(...dp.pop());
+};
+
+/**
+ * [不持有，持有]
+ * dp[i][0] i天 不持有最大收益
+ * dp[i][1] i天 持有最大收益
+ *
+ * dp[i][0] = Math.max(dp[i-1][0],dp[i-1][1] + prices[i])
+ * dp[i][1] = Math.max(dp[i-1][1],0 - proces[i])
+ *
+ * 初始化 dp[0][0] = 0 , dp[0][1] = -prices[0]
+ *
+ * 顺序
+ * @param {number[]} prices
+ * @return {number}
+ */
+var maxProfit = function (prices) {
+  const dp = Array.from({ length: prices.length }, () => [0, 0]);
+  dp[0] = [0, -prices[0]];
+
+  for (let i = 1; i < prices.length; i++) {
+    dp[i][0] = Math.max(dp[i - 1][0], dp[i - 1][1] + prices[i]);
+    dp[i][1] = Math.max(dp[i - 1][1], -prices[i]);
+  }
+
+  return Math.max(...dp[prices.length - 1]);
 };

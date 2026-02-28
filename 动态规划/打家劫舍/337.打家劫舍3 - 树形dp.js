@@ -33,3 +33,25 @@ function robNode(root) {
     /** 偷当前节点 */ root.val + leftResult[0] + rightResult[0],
   ];
 }
+
+/**
+ * Definition for a binary tree node.
+ * function TreeNode(val, left, right) {
+ *     this.val = (val===undefined ? 0 : val)
+ *     this.left = (left===undefined ? null : left)
+ *     this.right = (right===undefined ? null : right)
+ * }
+ */
+/**
+ * @param {TreeNode} root
+ * @return {number}
+ */
+var rob = function (node, root = node) {
+  if (!node) return [0, 0];
+  const [leftRob, leftNotRob] = rob(node.left, root);
+  const [rightRob, rightNotRob] = rob(node.right, root);
+
+  if (node === root)
+    return Math.max(node.val + leftNotRob + rightNotRob, Math.max(leftRob,leftNotRob) + Math.max(rightRob,rightNotRob));
+  return [node.val + leftNotRob + rightNotRob, Math.max(leftRob,leftNotRob) + Math.max(rightRob,rightNotRob)];
+};
