@@ -26,7 +26,7 @@
  */
 var findLength = function (nums1, nums2) {
   const dp = Array.from({ length: nums1.length }, () =>
-    new Array(nums2.length).fill(0)
+    new Array(nums2.length).fill(0),
   );
   let max = 0;
   for (let i = 0; i < nums1.length; i++) {

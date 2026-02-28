@@ -49,3 +49,22 @@ var findLengthOfLCIS = function (nums) {
   }
   return max;
 };
+
+/**
+ * 定义 第 i 个元素结尾的连续递增子序列 最大长度为 dp[i]
+ * dp[i] = nums[i-1] < nums[i] ? dp[i-1]+1: 1
+ * 初始化 dp[0] = 1
+ * 顺序
+ * @param {number[]} nums
+ * @return {number}
+ */
+var findLengthOfLCIS = function (nums) {
+  let max = 1
+  const dp = new Array(nums.length).fill(1);
+  for (let i = 1; i < nums.length; i++) {
+    dp[i] = nums[i - 1] < nums[i] ? dp[i - 1] + 1 : 1;
+    max = Math.max(max,dp[i] )
+  }
+  // 子序列不一定在最后产生
+  return max
+};

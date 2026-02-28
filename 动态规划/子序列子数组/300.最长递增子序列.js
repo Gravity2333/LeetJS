@@ -41,3 +41,25 @@ var lengthOfLIS = function (nums) {
 
   return max;
 };
+
+/**
+ * 和 连续子序列问题区别是 可能不连续
+ * 扩展 dp i 需要查看前 i-1个数
+ * @param {number[]} nums
+ * @return {number}
+ */
+var lengthOfLIS = function (nums) {
+  const dp = new Array(nums.length).fill(1);
+  let max = -Infinity;
+  for (let i = 1; i < nums.length; i++) {
+    let maxLen = 0;
+    for (let j = 0; j < i; j++) {
+      if (nums[j] < nums[i]) {
+        maxLen = Math.max(maxLen, dp[j]);
+      }
+    }
+    dp[i] = maxLen + 1;
+    max = Math.max(max, dp[i]);
+  }
+  return max < 1 ? 1 : max;
+};
