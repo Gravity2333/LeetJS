@@ -64,3 +64,44 @@ var findRedundantConnection = function (edges) {
     unionFind.join(from, to);
   }
 };
+
+class UnionFind {
+  parent = new Map();
+  add(x) {
+    if (!this.parent.has(x)) {
+      this.parent.set(x, x);
+    }
+  }
+
+  // 找到parent
+  find(x) {
+    this.add(x);
+    if (this.parent.get(x) !== x) {
+      this.parent.set(x, this.find(this.parent.get(x)));
+    }
+    return this.parent.get(x);
+  }
+
+  join(x, y) {
+    const xParent = this.find(x);
+    const yParent = this.find(y);
+
+    this.parent.set(xParent, yParent);
+  }
+
+  isConnected(x, y) {
+    return this.find(x) === this.find(y);
+  }
+}
+
+/**
+ * @param {number[][]} edges
+ * @return {number[]}
+ */
+var findRedundantConnection = function (edges) {
+  const uf = new UnionFind();
+  for (const [node1, node2] of edges) {
+    if (uf.isConnected(node1, node2)) return [node1, node2];
+    uf.join(node1, node2);
+  }
+};

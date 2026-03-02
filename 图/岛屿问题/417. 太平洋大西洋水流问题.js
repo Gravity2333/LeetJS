@@ -65,7 +65,7 @@ var AtlanticSign = 0b10;
  */
 var pacificAtlantic = function (heights) {
   const result = Array.from({ length: heights.length }, () =>
-    new Array(heights[0].length).fill(0)
+    new Array(heights[0].length).fill(0),
   );
 
   // 2 横 边
@@ -143,7 +143,7 @@ function BFSAndRecordFast(initQueue, heights, sign, result) {
  */
 var pacificAtlantic = function (heights) {
   const result = Array.from({ length: heights.length }, () =>
-    new Array(heights[0].length).fill(0)
+    new Array(heights[0].length).fill(0),
   );
 
   // 2 横 边
@@ -180,4 +180,82 @@ var pacificAtlantic = function (heights) {
     }
   }
   return list;
+};
+
+/**
+ * @param {number[][]} heights
+ * @return {number[][]}
+ */
+var pacificAtlantic = function (heights) {
+  const flow = Array.from({ length: heights.length }, () =>
+    new Array(heights[0].length).fill(0b00),
+  );
+
+  const nexts = [
+    [1, 0],
+    [-1, 0],
+    [0, 1],
+    [0, -1],
+  ];
+
+  function isValid([i, j]) {
+    return i >= 0 && i < heights.length && j >= 0 && j < heights[i].length;
+  }
+
+  const pacFlag = 0b01;
+  const atlFlag = 0b10;
+
+  function hasFlag(flags, flag) {
+    return (flags & flag) === flag;
+  }
+
+  function bfsAndMark([i, j], flag) {
+    flow[i][j] |= flag;
+    const queue = [[i, j]];
+
+    while (queue.length > 0) {
+      const node = queue.shift();
+      const currentHeight = heights[node[0]][node[1]];
+      for (const next of nexts) {
+        const nextPos = [node[0] + next[0], node[1] + next[1]];
+        if (!isValid(nextPos)) continue;
+        if (
+          !hasFlag(flow[nextPos[0]][nextPos[1]], flag) &&
+          heights[nextPos[0]][nextPos[1]] >= currentHeight
+        ) {
+          flow[nextPos[0]][nextPos[1]] |= flag;
+          queue.push(nextPos);
+        }
+      }
+    }
+  }
+
+  for (let i = 0; i < heights.length; i++) {
+    // pacFlag
+    bfsAndMark([i, 0], pacFlag);
+  }
+
+  for (let j = 0; j < heights[0].length; j++) {
+    // pacFlag
+    bfsAndMark([0, j], pacFlag);
+  }
+
+  for (let i = 0; i < heights.length; i++) {
+    // atl
+    bfsAndMark([i, heights[0].length - 1], atlFlag);
+  }
+
+  for (let j = 0; j < heights[0].length; j++) {
+    // atl
+    bfsAndMark([heights.length - 1, j], atlFlag);
+  }
+  const results = [];
+  for (let i = 0; i < heights.length; i++) {
+    for (let j = 0; j < heights[i].length; j++) {
+      if (flow[i][j] === 0b11) {
+        results.push([i, j]);
+      }
+    }
+  }
+  return results;
 };

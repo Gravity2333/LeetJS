@@ -40,7 +40,7 @@ function BfsAndCountAreas(x, y, grid) {
       if (!isValid(...nextPos, grid) || !isLand(...nextPos, grid)) continue;
       grid[nextPos[0]][nextPos[1]] = 0;
       area++;
-      queue.push(nextPos)
+      queue.push(nextPos);
     }
   }
 
@@ -60,5 +60,52 @@ var maxAreaOfIsland = function (grid) {
       }
     }
   }
-  return max
+  return max;
+};
+
+/**
+ * @param {number[][]} grid
+ * @return {number}
+ */
+var maxAreaOfIsland = function (grid) {
+  let maxArea = 0;
+  const nexts = [
+    [0, 1],
+    [1, 0],
+    [0, -1],
+    [-1, 0],
+  ];
+
+  function validate([i, j]) {
+    return i >= 0 && i < grid.length && j >= 0 && j < grid[i].length;
+  }
+
+  // bfs
+  function bfsAndCountAreas([i, j], context = {
+    area: 0
+  }) {
+    if (grid[i][j] == 1) {
+      context.area += 1;
+      grid[i][j] = 0;
+
+      for (const next of nexts) {
+        const nextPos = [next[0] + i, next[1] + j];
+        if (!validate(nextPos)) continue;
+        if (grid[nextPos[0]][nextPos[1]] == 1) {
+          bfsAndCountAreas(nextPos, context);
+        }
+      }
+    }
+
+    return context.area;
+  }
+
+  for (let i = 0; i < grid.length; i++) {
+    for (let j = 0; j < grid[i].length; j++) {
+      const currentArea = bfsAndCountAreas([i, j]);
+      maxArea = Math.max(maxArea, currentArea);
+    }
+  }
+
+  return maxArea;
 };

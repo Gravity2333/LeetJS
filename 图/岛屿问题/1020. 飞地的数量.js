@@ -80,3 +80,60 @@ var numEnclaves = function (grid) {
 
   return cnt;
 };
+
+/**
+ * @param {number[][]} grid
+ * @return {number}
+ */
+var numEnclaves = function (grid) {
+  let areas = 0;
+  const nexts = [
+    [0, 1],
+    [0, -1],
+    [1, 0],
+    [-1, 0],
+  ];
+
+  function validate([i, j]) {
+    return i >= 0 && i < grid.length && j >= 0 && j < grid[i].length;
+  }
+
+  function bfsAndRemoveLand([i, j]) {
+    if (grid[i][j] == 1) {
+      grid[i][j] = 0;
+      const queue = [[i, j]];
+
+      while (queue.length > 0) {
+        const node = queue.shift();
+        for (const next of nexts) {
+          const nextPos = [next[0] + node[0], next[1] + node[1]];
+          if (!validate(nextPos)) continue;
+          if (grid[nextPos[0]][nextPos[1]] == 1) {
+            grid[nextPos[0]][nextPos[1]] = 0;
+            queue.push(nextPos);
+          }
+        }
+      }
+    }
+  }
+
+  for (let i = 0; i < grid.length; i++) {
+          bfsAndRemoveLand([i, 0]);
+              bfsAndRemoveLand([i, grid[0].length-1]);
+  }
+
+  for (let j = 0; j < grid[0].length; j++) {
+        bfsAndRemoveLand([0, j]);
+              bfsAndRemoveLand([grid.length-1, j]);
+  }
+
+  for (let i = 0; i < grid.length; i++) {
+    for (let j = 0; j < grid[i].length; j++) {
+      if(grid[i][j] == 1){
+        areas+=1
+      }
+    }
+  }
+
+  return areas
+};

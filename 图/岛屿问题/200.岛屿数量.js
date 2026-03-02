@@ -132,3 +132,49 @@ var numIslands = function (grid) {
   }
   return cnt;
 };
+
+/**
+ * @param {character[][]} grid
+ * @return {number}
+ */
+var numIslands = function (grid) {
+  // dfs impl
+  let areas = 0;
+  const nexts = [
+    [1, 0],
+    [-1, 0],
+    [0, 1],
+    [0, -1],
+  ];
+
+  function isValid([i, j]) {
+    return i >= 0 && i < grid.length && j >= 0 && j < grid[i].length;
+  }
+
+  function dfsAndCntNum(i, j) {
+    if (grid[i][j] == 1) {
+      areas++;
+      grid[i][j] = 0;
+      const queue = [[i, j]];
+      while (queue.length > 0) {
+        const node = queue.shift();
+
+        for (let next of nexts) {
+          const nextPos = [next[0] + node[0], next[1] + node[1]];
+          if (!isValid(nextPos)) continue;
+          if (grid[nextPos[0]][nextPos[1]] == 1) {
+            grid[nextPos[0]][nextPos[1]] = 0;
+            queue.push(nextPos);
+          }
+        }
+      }
+    }
+  }
+
+  for (let i = 0; i < grid.length; i++) {
+    for (let j = 0; j < grid[i].length; j++) {
+      dfsAndCntNum(i, j);
+    }
+  }
+  return areas;
+};
