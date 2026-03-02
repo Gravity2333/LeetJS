@@ -57,3 +57,34 @@ var reverseStr = function (s, k) {
   }
   return arr.join('')
 };
+
+
+
+/**
+ * @param {character[]} s
+ * @return {void} Do not return anything, modify s in-place instead.
+ */
+var reverseString = function (s,left = 0,right = s.length - 1) {
+  while (left < right) {
+    const tmp = s[left];
+    s[left] = s[right];
+    s[right] = tmp;
+    left++
+    right--
+  }
+};
+
+
+/**
+ * @param {string} s
+ * @param {number} k
+ * @return {string}
+ */
+var reverseStr = function(s, k) {
+  const arr = s.split('')
+    for(let i=0,reverse = true;i< s.length;i+=k,reverse = !reverse){
+      if(!reverse) continue
+      reverseString(arr,i,i+k-1)
+    }
+    return arr.join('')
+};

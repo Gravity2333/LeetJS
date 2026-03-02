@@ -133,7 +133,6 @@ var reverseWords = function (s) {
   return s.join("");
 };
 
-
 function reverse(s, start = 0, end = s.length - 1) {
   if (s.length === 0 || start >= end) return s;
   s = Array.isArray(s) ? s : Array.from(s);
@@ -155,7 +154,52 @@ function reverse(s, start = 0, end = s.length - 1) {
  * @return {string}
  */
 var reverseWords = function (s) {
-  s=s.trim()
-  s=s.split(' ').filter(f=>f)
-  return reverse(s).join(' ')
+  s = s.trim();
+  s = s.split(" ").filter((f) => f);
+  return reverse(s).join(" ");
+};
+
+/** 去空格 */
+function removeMoreSpace(s) {
+    s = s.split('')
+  let slow = 0;
+  let fast = 0,
+    fastPrev = -1;
+
+  while (fast < s.length) {
+    if (fastPrev >= 0 && s[fastPrev] !== " " && s[fast] === " ") {
+      s[slow++] = s[fast];
+    } else if (s[fast] !== " ") {
+      s[slow++] = s[fast];
+    }
+    fastPrev = fast;
+    fast++;
+  }
+  s = s.slice(0,slow)
+  return s.join('') ;
+}
+
+function reverseArr(s){
+  let left = 0
+  let right =s.length - 1
+  while(left < right){
+    const tmp = s[left]
+    s[left] = s[right]
+    s[right]=tmp
+    left++
+    right--
+  }
+  return s
+}
+
+/**
+ * @param {string} s
+ * @return {string}
+ */
+var reverseWords = function (s) {
+    s = s.trim();
+  s = removeMoreSpace(s)
+  s = s.split(' ')
+  s =reverseArr(s)
+  return s.join(' ')
 };
