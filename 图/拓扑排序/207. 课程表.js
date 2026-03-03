@@ -26,7 +26,7 @@ var canFinish = function (numCourses, prerequisites) {
   /** 入度list */
   const indegrees = new Array(numCourses).fill(0);
   /** 构建邻接表 */
-  const adjacencyList = Array.from({length: numCourses},()=>[]);
+  const adjacencyList = Array.from({ length: numCourses }, () => []);
   for (const prerequisity of prerequisites) {
     const [to, from] = prerequisity;
     indegrees[to]++;
@@ -52,5 +52,37 @@ var canFinish = function (numCourses, prerequisites) {
     }
   }
 
+  return true;
+};
+
+/**
+ * @param {number} numCourses
+ * @param {number[][]} prerequisites
+ * @return {boolean}
+ */
+var canFinish = function (numCourses, prerequisites) {
+  const prev = new Array(numCourses).fill(0);
+  for (const prerequisity of prerequisites) {
+    prev[prerequisity[0]]++;
+  }
+  let finished = 0;
+  while (finished < numCourses) {
+    let finishedCources = -1;
+    for (let i = 0; i < prev.length; i++) {
+      if (prev[i] === -1) continue;
+      if (prev[i] === 0) {
+        finished++;
+        finishedCources = i;
+        prev[i] = -1;
+        for (const prerequisity of prerequisites) {
+          if(prerequisity[1] === i){
+            prev[prerequisity[0]]--;
+          }
+        }
+        break;
+      }
+    }
+    if (finishedCources === -1) return false;
+  }
   return true;
 };

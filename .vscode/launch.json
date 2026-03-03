@@ -11,7 +11,7 @@
             "skipFiles": [
                 "<node_internals>/**"
             ],
-            "program": "${workspaceFolder}/图/岛屿问题/孤岛面积.js",
+            "program": "${workspaceFolder}/图/最小生成树/53.寻宝acm.js",
             "console": "integratedTerminal"
         }
     ]

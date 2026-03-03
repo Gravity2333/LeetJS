@@ -64,3 +64,55 @@ var findTheCity = function (n, edges, distanceThreshold) {
 
   return minArriveCityIndex;
 };
+
+/**
+ * @param {number} n
+ * @param {number[][]} edges
+ * @param {number} distanceThreshold
+ * @return {number}
+ */
+var findTheCity = function (n, edges, distanceThreshold) {
+  const grid = Array.from({ length: n }, () => new Array(n).fill(Infinity));
+  for (const edge of edges) {
+    const [from, to, power] = edge;
+    grid[from][to] = grid[to][from] = power;
+  }
+
+  // dp[k][i][j] 从 i->j 可以经过前k个元素 最短距离
+  // dp[k][i][j] = Math.min(dp[k-1][i][j](不经过k)，do[k-1][i][k]+dp[k-1][k][j])
+  // 初始化第一层 不经过任何节点
+
+  const dp = Array.from({ length: n }, () => new Array(n).fill(Infinity));
+  for (let i = 0; i < n; i++) {
+    for (let j = 0; j < n; j++) {
+      dp[i][j] = grid[i][j];
+    }
+  }
+
+  for (let k = 0; k < n; k++) {
+    for (let i = 0; i < n; i++) {
+      for (let j = 0; j < n; j++) {
+        if (i === j) continue;
+        dp[i][j] = Math.min(dp[i][k] + dp[k][j], dp[i][j]);
+      }
+    }
+  }
+
+  let minIndex = 0;
+  let min = Infinity;
+
+  for (let i = 0; i < dp.length; i++) {
+    let currentMinArrive = 0;
+    for (let j = 0; j < dp[i].length; j++) {
+      if (dp[i][j] <= distanceThreshold) {
+        currentMinArrive++;
+      }
+    }
+
+    if (currentMinArrive <= min) {
+      min = currentMinArrive;
+      minIndex = i;
+    }
+  }
+  return minIndex;
+};

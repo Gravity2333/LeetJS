@@ -11,7 +11,7 @@
  * @return {number}
  */
 var networkDelayTime = function (times, n, k) {
-  const adjacencyList = Array.from({ length: n+1 }, () => []);
+  const adjacencyList = Array.from({ length: n + 1 }, () => []);
   for (const time of times) {
     const [from, to, weight] = time;
     adjacencyList[from].push({
@@ -20,8 +20,8 @@ var networkDelayTime = function (times, n, k) {
     });
   }
 
-  const dist = Array.from({ length: n+1 }, ()=>Infinity);
-  const visited = Array.from({ length: n+1 }, () => false);
+  const dist = Array.from({ length: n + 1 }, () => Infinity);
+  const visited = Array.from({ length: n + 1 }, () => false);
   // 从 k 开始
   let currentCollectedNode = k;
   let collected = 1;
@@ -59,6 +59,61 @@ var networkDelayTime = function (times, n, k) {
     collected++;
   }
 
-  const max =  Math.max(...dist.slice(1))
-  return max === Infinity ? -1: max
+  const max = Math.max(...dist.slice(1));
+  return max === Infinity ? -1 : max;
+};
+
+/**
+ * @param {number[][]} times
+ * @param {number} n
+ * @param {number} k
+ * @return {number}
+ */
+var networkDelayTime = function (times, n, k) {
+  const adj = Array.from({ length: n+1 }, () => []);
+
+  for (const time of times) {
+    const [from, to, power] = time;
+    adj[from].push({
+      to,
+      power,
+    });
+  }
+
+  const minDist = new Array(n+1).fill(Infinity);
+  const visited = new Array(n+1).fill(false);
+  visited[k] = true;
+  minDist[k] = 0;
+  let current = k;
+  let finished = 0;
+
+  while (finished < n) {
+    visited[current] = true;
+    const neighbors = adj[current];
+    for (const neighbor of neighbors) {
+      const { to, power } = neighbor;
+      if (visited[to]) continue;
+      // update minDist
+      const totalPower = minDist[current] + power;
+      minDist[to] = Math.min(minDist[to], totalPower);
+    }
+
+    let minIndex = 0;
+    let minValue = Infinity;
+
+    for (let i = 0; i < minDist.length; i++) {
+      if (visited[i]) continue;
+      if (minDist[i] < minValue) {
+        minValue = minDist[i];
+        minIndex = i;
+      }
+    }
+
+
+    current = minIndex;
+    finished++;
+  }
+
+  const max = Math.max(...minDist.slice(1))
+  return max === Infinity ? -1 : max;
 };
