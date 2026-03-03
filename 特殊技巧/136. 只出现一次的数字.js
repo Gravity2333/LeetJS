@@ -55,3 +55,20 @@ var singleNumber = function(nums) {
 
     return result
 };
+
+
+/**
+ * 
+ * 方法2 异或 ！
+ * 异或 可以交换 一个数出现偶数次数 异或之后为0 
+ * @param {number[]} nums
+ * @return {number}
+ */
+var singleNumber = function(nums) {
+    let result = nums[0]
+    for(let i=1;i<nums.length;i++){
+       result ^= nums[i]
+    }
+
+    return result
+};

@@ -27,3 +27,38 @@ var rotate = function (nums, k) {
   rotateArr(nums, 0, k - 1);
   rotateArr(nums, k);
 };
+
+/**  超时
+ * @param {number[]} nums
+ * @param {number} k
+ * @return {void} Do not return anything, modify nums in-place instead.
+ */
+var rotate = function (nums, k) {
+  k = k % nums.length;
+  for (let i = 0; i < k; i++) {
+    nums.unshift(nums.pop());
+  }
+};
+
+function rotateArr(nums, i, j) {
+  let left = i;
+  let right = j;
+  while (left < right) {
+    const tmp = nums[left];
+    nums[left] = nums[right];
+    nums[right] = tmp;
+    left++;
+    right--;
+  }
+}
+/**
+ * @param {number[]} nums
+ * @param {number} k
+ * @return {void} Do not return anything, modify nums in-place instead.
+ */
+var rotate = function (nums, k) {
+  k = k % nums.length;
+  rotateArr(nums, 0, nums.length - 1);
+  rotateArr(nums, 0, k - 1);
+  rotateArr(nums, k , nums.length - 1);
+};

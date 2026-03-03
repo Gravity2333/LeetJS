@@ -24,3 +24,28 @@ var productExceptSelf = function (nums) {
 
   return multPrefix.map((num, index) => num * multSuffix[index]);
 };
+
+/**
+ * @param {number[]} nums
+ * @return {number[]}
+ */
+var productExceptSelf = function (nums) {
+  const prefix = [1];
+  const suffix = [1];
+
+  for (let i = 1; i < nums.length; i++) {
+    prefix.push(prefix[prefix.length - 1] * nums[i - 1]);
+  }
+
+  for (let i = nums.length - 2; i >= 0; i--) {
+    suffix.unshift(suffix[0] * nums[i + 1]);
+  }
+  const results = [];
+  for (let i = 0; i < nums.length; i++) {
+    const left = prefix[i] 
+    const right = suffix[i]
+    results[i] = left * right;
+  }
+
+  return results;
+};

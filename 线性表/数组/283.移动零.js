@@ -20,3 +20,22 @@ var moveZeroes = function (nums) {
     slow++;
   }
 };
+
+/**
+ * @param {number[]} nums
+ * @return {void} Do not return anything, modify nums in-place instead.
+ */
+var moveZeroes = function (nums) {
+  let slow = 0;
+  let fast = 0;
+
+  for (; fast < nums.length; fast++) {
+    if (nums[fast] != 0) {
+      nums[slow++] = nums[fast];
+    }
+  }
+
+  for (; slow < nums.length; slow++) {
+    nums[slow] = 0;
+  }
+};

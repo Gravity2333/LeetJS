@@ -17,5 +17,25 @@ var merge = function (intervals) {
       current = interval;
     }
   }
-  return results.concat([current])
+  return results.concat([current]);
+};
+
+/**
+ * @param {number[][]} intervals
+ * @return {number[][]}
+ */
+var merge = function (intervals) {
+  intervals = intervals.toSorted((a, b) => a[0] - b[0]);
+  const results = [intervals.shift()];
+  for (const interval of intervals) {
+    const last = results.pop()
+    const [start,end] = last
+
+    if(interval[0] <= end){
+      results.push([Math.min(start,interval[0]),Math.max(end,interval[1])])
+    }else{
+      results.push(last,interval)
+    }
+  }
+  return results
 };
