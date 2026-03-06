@@ -97,10 +97,10 @@ function runExtremeTests(sortFn) {
   );
 }
 
-// runExtremeTests(require("./简单排序/bubbleSort"));
-// runExtremeTests(require("./简单排序/selectSort"));
-// runExtremeTests(require("./简单排序/insertSort"));
+// runExtremeTests(require("./简单排序/bubbleSort")); // 冒泡
+// runExtremeTests(require("./简单排序/selectSort")); // 选择
+// runExtremeTests(require("./简单排序/insertSort")); // 插入
 
-// runExtremeTests(require("./高级排序/merge"));
-// runExtremeTests(require("./高级排序/quick"));
-runExtremeTests(require("./高级排序/shell"));
+// runExtremeTests(require("./高级排序/merge")); // 归并
+// runExtremeTests(require("./高级排序/quick")); // 快排
+runExtremeTests(require("./高级排序/shell")); // 希尔

@@ -1,29 +1,55 @@
+// module.exports = function sort(arr) {
+//   if (arr.length <= 1) return arr;
+//   const mid = Math.trunc((0 + arr.length - 1) / 2);
+//   const leftResults = sort(arr.slice(0, mid+1));
+//   const rightResults = sort(arr.slice(mid+1));
+
+//   const result = [];
+//   while (leftResults.length > 0 && rightResults.length > 0) {
+//     if (leftResults[0] <= rightResults[0]) {
+//       const next = leftResults.shift();
+//       result.push(next);
+//     } else {
+//       const next = rightResults.shift();
+//       result.push(next);
+//     }
+//   }
+
+//   while (leftResults.length > 0) {
+//     const next = leftResults.shift();
+//     result.push(next);
+//   }
+
+//   while (rightResults.length > 0) {
+//     const next = rightResults.shift();
+//     result.push(next);
+//   }
+
+//   return result
+// };
+
 module.exports = function sort(arr) {
   if (arr.length <= 1) return arr;
   const mid = Math.trunc((0 + arr.length - 1) / 2);
-  const leftResults = sort(arr.slice(0, mid+1));
-  const rightResults = sort(arr.slice(mid+1));
+  const leftSorted = sort(arr.slice(0, mid + 1));
+  const rightSorted = sort(arr.slice(mid + 1));
+  const results = [];
 
-  const result = [];
-  while (leftResults.length > 0 && rightResults.length > 0) {
-    if (leftResults[0] <= rightResults[0]) {
-      const next = leftResults.shift();
-      result.push(next);
+  while (leftSorted.length > 0 && rightSorted.length > 0) {
+    if (leftSorted[0] <= rightSorted[0]) {
+      results.push(leftSorted.shift());
     } else {
-      const next = rightResults.shift();
-      result.push(next);
+      results.push(rightSorted.shift());
     }
   }
 
-  while (leftResults.length > 0) {
-    const next = leftResults.shift();
-    result.push(next);
+  while (leftSorted.length > 0) {
+    results.push(leftSorted.shift());
   }
 
-  while (rightResults.length > 0) {
-    const next = rightResults.shift();
-    result.push(next);
+  while (rightSorted.length > 0) {
+    results.push(rightSorted.shift());
   }
 
-  return result
+  return results;
 };
