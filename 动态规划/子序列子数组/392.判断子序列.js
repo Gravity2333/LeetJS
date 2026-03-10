@@ -71,3 +71,26 @@ var isSubsequence = function (s, t) {
 
   return dp[s.length - 1][t.length - 1] === s.length;
 };
+
+
+
+/** 双指针 s是子
+ * @param {string} s
+ * @param {string} t
+ * @return {boolean}
+ */
+var isSubsequence = function (s, t) {
+ let slow = 0
+ let fast = 0
+
+ while(fast < t.length){
+  if(t[fast] === s[slow]){
+    slow++
+    fast++
+  }else{
+    fast++
+  }
+ }
+
+ return slow > s.length - 1
+};

@@ -63,3 +63,27 @@ var lengthOfLIS = function (nums) {
   }
   return max < 1 ? 1 : max;
 };
+
+
+/**
+ * 和 连续子序列问题区别是 可能不连续
+ * 扩展 dp i 需要查看前 i-1个数
+ * @param {number[]} nums
+ * @return {number}
+ */
+var lengthOfLIS = function (nums) {
+ // 对于i结尾的子数组 其最大递增子序列为dp[i]
+ 
+ const dp = new Array(nums.length).fill(1)
+
+ for(let i = 1;i<nums.length;i++){
+  let max = 0
+    for(let j=0;j<i;j++){
+      if(nums[j] < nums[i]){
+      max= Math.max(max,dp[j])
+      }
+    }
+    dp[i] = max + 1
+ }
+ return Math.max(...dp)
+};

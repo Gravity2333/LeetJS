@@ -70,10 +70,24 @@ var maxSubArray = function (nums) {
 var maxSubArray = function (nums) {
   const dp = Array.from({ length: nums.length }, () => 0);
   dp[0] = nums[0];
-  let max  = dp[0]
+  let max = dp[0];
   for (let i = 1; i < nums.length; i++) {
     dp[i] = dp[i - 1] + nums[i] > nums[i] ? dp[i - 1] + nums[i] : nums[i];
-    max = Math.max(max,dp[i])
+    max = Math.max(max, dp[i]);
   }
-  return max
+  return max;
+};
+
+var maxSubArray = function (nums) {
+  let sum = 0;
+  let max = -Infinity;
+  for (let i = 0; i < nums.length; i++) {
+    if (sum + nums[i] < nums[i]) {
+      sum = nums[i];
+    } else {
+      sum = nums[i] + sum;
+    }
+    max = Math.max(max, sum);
+  }
+  return max;
 };

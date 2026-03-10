@@ -111,15 +111,58 @@ var longestCommonSubsequence = function (text1, text2) {
     }
   }
 
-  for(let i=1;i<text1.length;i++){
-    for(let j=1;j<text2.length;j++){
-      dp[i][j] = text1[i] === text2[j] ? dp[i-1][j-1] + 1 : Math.max(
-        dp[i-1][j],
-        dp[i][j-1]
-      )
+  for (let i = 1; i < text1.length; i++) {
+    for (let j = 1; j < text2.length; j++) {
+      dp[i][j] =
+        text1[i] === text2[j]
+          ? dp[i - 1][j - 1] + 1
+          : Math.max(dp[i - 1][j], dp[i][j - 1]);
     }
   }
-  return dp[text1.length-1][text2.length-1]
+  return dp[text1.length - 1][text2.length - 1];
 };
 
+/** 递推公式含义是
+ *  如果用之前的 i j 结尾的子序列 最长为dp[i][j] 需要从 0 -> i 0->j遍历子序列 会超时
+ * 这里使用的定义是 前 i j 个元素组成的最长公共子序列为 dp[i][j]
+ * 有 dp[i][j] = text1[i] === text2[j] ? dp[i-1][j-1] + 1 : Math.max(dp[i-1][j],dp[i][j-1])
+ * 初始化 第一行 如果 text2[j] === text1[0]  后面所有的都是1
+ * 第一列 如果text1[i] === text2[0] 后面都是1
+ * @param {string} text1
+ * @param {string} text2
+ * @return {number}
+ */
+var longestCommonSubsequence = function (text1, text2) {
+  /**
+   * 对于 i j 结尾的子串 最大公共子串长度为dp[i][j]
+   */
 
+  const dp = Array.from({ length: text1.length }, () =>
+    new Array(text2.length).fill(0),
+  );
+  // 初始化
+  // 对于text1[0] 只要text2包含这个字符 后面都是1
+  // 对于text2[0] 只要text1包含这个字符 后面都是1
+  for (let j = 0; j < text2.length; j++) {
+    if (text2[j] === text1[0]) {
+      while (j < text2.length) dp[0][j++] = 1;
+    }
+  }
+
+  for (let i = 0; i < text1.length; i++) {
+    if (text1[i] === text2[0]) {
+      while (i < text1.length) dp[i++][0] = 1;
+    }
+  }
+
+  for (let i = 1; i < text1.length; i++) {
+    for (let j = 1; j < text2.length; j++) {
+      dp[i][j] =
+        text1[i] === text2[j]
+          ? dp[i - 1][j - 1] + 1
+          : Math.max(dp[i - 1][j], dp[i][j - 1]);
+    }
+  }
+
+  return dp[text1.length-1][text2.length-1]
+};

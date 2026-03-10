@@ -44,3 +44,39 @@ var longestPalindromeSubseq = function (s) {
   }
   return max;
 };
+
+
+
+
+/**
+ * @param {string} s
+ * @return {number}
+ */
+var longestPalindromeSubseq = function(s) {
+    if(s.length === 1) return 1
+    // ij为 i<=j 从 i=>j 的最长回文子序列长度 dp[i][j]
+    // dp[i][j] = s[i] === s[j] ? dp[i+1][j-1] : Math.max(dp[i+1,j],dp[i,j-1])
+    // 初始化 i j 相同的时候 为 1
+    // 顺序 从下往上
+    const dp = Array.from({ length: s.length },()=>new Array(s.length).fill(0))
+    for(let i=0;i<s.length;i++){dp[i][i] = 1}
+    let max = -Infinity
+    for(let i = s.length - 2;i>=0;i--){
+      for(let j = i+1;j<s.length;j++){
+        if(s[i] === s[j]){
+          if(j === i+1) dp[i][j] = 2
+          else{
+            dp[i][j] = 2+dp[i+1][j-1]
+          }
+        }else{
+           if(j === i+1) dp[i][j] = 1
+          else{
+            dp[i][j] = Math.max(dp[i][j-1],dp[i+1][j])
+          }
+        }
+
+        max = Math.max(dp[i][j],max)
+      }
+    }
+    return max
+};

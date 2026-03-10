@@ -68,3 +68,21 @@ var findLengthOfLCIS = function (nums) {
   // 子序列不一定在最后产生
   return max
 };
+
+
+/**
+ * @param {number[]} nums
+ * @return {number}
+ */
+var findLengthOfLCIS = function (nums) {
+  // i 结尾的子数组，最长连续递增序列 dp[i]
+  // dp[i] = nums[i-1] < nums[i] ? dp[i-1]+1,1
+  // 初始化 dp[0] = 1
+  let max = 1
+  const dp = new Array(nums.length).fill(1)
+  for(let i=1;i<nums.length;i++){
+    dp[i]= nums[i-1] < nums[i] ? dp[i-1]+1:1
+    max = Math.max(max,dp[i])
+  }
+  return max
+};
