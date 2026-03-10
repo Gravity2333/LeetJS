@@ -150,3 +150,82 @@ class LRUCache {
     }
   }
 }
+
+class LRUCache {
+  constructor(capacity) {
+    this.capacity = capacity;
+    this.map = new Map();
+    this.head = {
+      val: "head",
+      next: null,
+      prev: null,
+    };
+    this.tail = {
+      val: "tail",
+      next: null,
+      prev: null,
+    };
+    this.head.next = this.tail;
+    this.tail.prev = this.head;
+  }
+
+  move2Head(node) {
+    // remove node
+    node.prev.next = node.next;
+    node.next.prev = node.prev;
+
+    // 插入到 head后
+    node.next = this.head.next;
+    node.next.prev = node;
+    node.prev = this.head;
+    this.head.next = node;
+  }
+
+  deleteAtTail() {
+    if (this.head.next === this.tail) return;
+    const delNode = this.tail.prev;
+    this.tail.prev = delNode.prev;
+    delNode.prev.next = this.tail;
+
+    this.map.delete(delNode.key);
+  }
+
+  get(key) {
+    if (this.map.has(key)) {
+      const node = this.map.get(key);
+      this.move2Head(node);
+      return node.val;
+    }
+    return -1
+  }
+
+  put(key, val) {
+    if (this.map.has(key)) {
+      // 改值
+      const node = this.map.get(key);
+      this.move2Head(node);
+      node.val = val;
+    } else {
+      // 插入
+      if (this.map.size >= this.capacity) {
+        // 先删除
+        this.deleteAtTail();
+      }
+
+      const node = {
+        key,
+        val,
+        next: null,
+        prev: null,
+      };
+
+      // 插入到 head后
+      node.next = this.head.next;
+      node.next.prev = node;
+      node.prev = this.head;
+      this.head.next = node;
+
+      this.map.set(key,node)
+    }
+  }
+}
