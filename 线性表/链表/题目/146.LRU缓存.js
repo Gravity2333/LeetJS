@@ -100,7 +100,6 @@ class LRUCache {
     };
     this.head.next = this.tail;
     this.tail.prev = this.head;
-    this.size = 0;
   }
 
   move2Head(node) {
@@ -136,11 +135,10 @@ class LRUCache {
         next: null,
         prev: null,
       };
-      if (this.size >= this.capacity) {
+      if (this.map.size >= this.capacity) {
         const needDelNode = this.tail.prev;
         this.tail.prev = needDelNode.prev;
         this.tail.prev.next = this.tail;
-        this.size--;
         this.map.delete(needDelNode.key);
       }
 
@@ -148,7 +146,6 @@ class LRUCache {
       node.next.prev = node;
       node.prev = this.head;
       this.head.next = node;
-      this.size++;
       this.map.set(key, node);
     }
   }

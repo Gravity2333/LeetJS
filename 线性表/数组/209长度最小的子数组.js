@@ -81,8 +81,34 @@ var minSubArrayLen = function (target, nums) {
 
     // 再次扩大窗口
     right++;
-    sum += nums[right]
+    sum += nums[right];
   }
 
   return minLen === Infinity ? 0 : minLen;
+};
+
+/**
+ * @param {number} target
+ * @param {number[]} nums
+ * @return {number}
+ */
+var minSubArrayLen = function (target, nums) {
+  let sum = 0;
+  let min = Infinity;
+  let left = 0,
+    right = 0;
+  for (; right < nums.length; right++) {
+    sum = sum + nums[right];
+    if (sum >= target) {
+      min = Math.min(min, right - left + 1);
+      // 收缩
+      while (sum - nums[left] >= target) {
+        const removed = nums[left];
+        sum -= removed;
+        left++;
+        min = Math.min(min, right - left + 1);
+      }
+    }
+  }
+  return min === Infinity ? 0 : min;
 };
