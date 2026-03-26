@@ -105,3 +105,40 @@ var swapPairs = function (head) {
 
   return virtualHead.next;
 };
+
+
+
+/**
+ * Definition for singly-linked list.
+ * function ListNode(val, next) {
+ *     this.val = (val===undefined ? 0 : val)
+ *     this.next = (next===undefined ? null : next)
+ * }
+ */
+/**
+ * @param {ListNode} head
+ * @return {ListNode}
+ */
+var swapPairs = function(head) {
+    if(!head) return head
+    let v = {
+      val: 'virtual',
+      next: head,
+    }
+
+    let prev = v
+    let left = head
+    let right = head.next
+    while(left && right){
+      const tmp = right.next
+      right.next = left
+      left.next  = tmp
+      prev.next = right
+
+      prev = left
+      left = tmp
+      right = left?.next
+    }
+
+    return v.next
+};

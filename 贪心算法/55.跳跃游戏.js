@@ -24,10 +24,25 @@
  */
 var canJump = function (nums) {
   let maxRange = nums[0];
-  let i = 0
+  let i = 0;
   while (maxRange < nums.length - 1 && i <= maxRange) {
-    maxRange = Math.max( nums[i] + i, maxRange);
+    maxRange = Math.max(nums[i] + i, maxRange);
     i++;
   }
+  return maxRange >= nums.length - 1;
+};
+
+/**
+ * @param {number[]} nums
+ * @return {boolean}
+ */
+var canJump = function (nums) {
+  let maxRange = nums[0];
+  let current = 0;
+  while (current <= maxRange && maxRange < nums.length) {
+    maxRange = Math.max(maxRange, nums[current] + current);
+    current++;
+  }
+
   return maxRange >= nums.length - 1;
 };

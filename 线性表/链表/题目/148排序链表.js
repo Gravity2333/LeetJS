@@ -139,3 +139,69 @@ function splitLink(head) {
   slow.next = null;
   return [head, right];
 }
+
+/**
+ * Definition for singly-linked list.
+ * function ListNode(val, next) {
+ *     this.val = (val===undefined ? 0 : val)
+ *     this.next = (next===undefined ? null : next)
+ * }
+ */
+/**
+ * @param {ListNode} head
+ * @return {ListNode}
+ */
+var sortList = function (head) {
+  if (!head || !head?.next) return head;
+  let slow = head;
+  let fast = head;
+
+  while (fast && fast?.next?.next) {
+    fast = fast.next;
+    fast = fast.next;
+    slow = slow.next;
+  }
+
+  let right = sortList(slow.next);
+  slow.next = null;
+  let left = sortList(head);
+
+  const v = {
+    next: null,
+  };
+  let wip = v;
+
+  while (left && right) {
+    if (left.val < right.val) {
+      wip = wip.next = {
+        val: left.val,
+        next: null,
+      };
+      left = left.next;
+    } else {
+      wip = wip.next = {
+        val: right.val,
+        next: null,
+      };
+      right = right.next;
+    }
+  }
+
+  while (left) {
+    wip = wip.next = {
+      val: left.val,
+      next: null,
+    };
+    left = left.next;
+  }
+
+  while (right) {
+    wip = wip.next = {
+      val: right.val,
+      next: null,
+    };
+    right = right.next;
+  }
+
+  return v.next;
+};

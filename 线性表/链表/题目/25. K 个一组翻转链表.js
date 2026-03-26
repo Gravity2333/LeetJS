@@ -57,7 +57,7 @@ function canReverse(head, k) {
 function reverseK(head, k) {
   let prev = head;
   let wip = prev?.next;
-  if (!wip) return [prev,prev];
+  if (!wip) return [prev, prev];
   let tmp;
   for (let i = 0; i < k - 1; i++) {
     tmp = wip.next;
@@ -83,6 +83,49 @@ var reverseKGroup = function (head, k) {
     const [start, end] = reverseK(prev.next, k);
     prev.next = start;
     prev = end;
+  }
+
+  return v.next;
+};
+
+/**
+ * Definition for singly-linked list.
+ * function ListNode(val, next) {
+ *     this.val = (val===undefined ? 0 : val)
+ *     this.next = (next===undefined ? null : next)
+ * }
+ */
+function detectK(head, k) {
+  let wip = head;
+  for (let i = 0; i < k; i++) {
+    if (!wip) return false;
+    wip = wip?.next;
+  }
+  return true;
+}
+/**
+ * @param {ListNode} head
+ * @param {number} k
+ * @return {ListNode}
+ */
+var reverseKGroup = function (head, k) {
+  const v = { next: head };
+  let prev = v;
+  let left = head;
+
+  while (detectK(left, k)) {
+    let right = left.next;
+    const start = left;
+    for (let i = 0; i < k-1; i++) {
+      const tmp = right.next;
+      right.next = left;
+      left = right;
+      right = tmp;
+    }
+    start.next = right;
+    prev.next = left;
+    prev = start;
+    left = right;
   }
 
   return v.next;

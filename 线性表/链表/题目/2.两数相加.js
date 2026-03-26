@@ -120,3 +120,40 @@ var addTwoNumbers = function (l1, l2) {
 
   return v.next;
 };
+
+/**
+ * Definition for singly-linked list.
+ * function ListNode(val, next) {
+ *     this.val = (val===undefined ? 0 : val)
+ *     this.next = (next===undefined ? null : next)
+ * }
+ */
+/**
+ * @param {ListNode} l1
+ * @param {ListNode} l2
+ * @return {ListNode}
+ */
+var addTwoNumbers = function (l1, l2) {
+  const v = {
+    next: null,
+  };
+
+  let sumPtr = v;
+  let l1ptr = l1;
+  let l2ptr = l2;
+  let increase = 0;
+
+  while (l1ptr || l2ptr || increase) {
+    let sum = (l1ptr?.val || 0) + (l2ptr?.val || 0) + increase;
+    increase = Math.trunc(sum / 10);
+    sum = sum % 10;
+    sumPtr = sumPtr.next = {
+      val: sum,
+      next: null,
+    };
+    l1ptr = l1ptr?.next;
+    l2ptr = l2ptr?.next;
+  }
+
+  return v.next;
+};

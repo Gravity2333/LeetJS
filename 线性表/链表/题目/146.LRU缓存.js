@@ -196,7 +196,7 @@ class LRUCache {
       this.move2Head(node);
       return node.val;
     }
-    return -1
+    return -1;
   }
 
   put(key, val) {
@@ -225,7 +225,98 @@ class LRUCache {
       node.prev = this.head;
       this.head.next = node;
 
-      this.map.set(key,node)
+      this.map.set(key, node);
     }
   }
 }
+
+// ---------------------
+
+/**
+ * @param {number} capacity
+ */
+var LRUCache = function (capacity) {
+  this.capacity = capacity;
+  this.map = new Map();
+  this.head = {
+    key: "head",
+    value: "head",
+    next: null,
+    prev: null,
+  };
+
+  this.tail = {
+    key: "tail",
+    value: "tail",
+    next: null,
+    prev: null,
+  };
+
+  this.head.next = this.tail;
+  this.tail.prev = this.head;
+};
+
+LRUCache.prototype.move2Head = function (node) {
+  node.next = this.head.next;
+  node.next.prev = node;
+  node.prev = this.head;
+  this.head.next = node;
+};
+
+LRUCache.prototype.deleteAtTail = function () {
+  const needDelNode = this.tail.prev;
+  this.tail.prev = needDelNode.prev;
+  needDelNode.prev.next = this.tail;
+  this.map.delete(needDelNode.key);
+};
+
+/**
+ * @param {number} key
+ * @return {number}
+ */
+LRUCache.prototype.get = function (key) {
+  if (this.map.has(key)) {
+    const node = this.map.get(key);
+    node.prev.next = node.next;
+    node.next.prev = node.prev;
+    this.move2Head(node);
+    return node.value;
+  }
+
+  return -1;
+};
+
+/**
+ * @param {number} key
+ * @param {number} value
+ * @return {void}
+ */
+LRUCache.prototype.put = function (key, value) {
+  if (this.map.has(key)) {
+    const node = this.map.get(key);
+    node.prev.next = node.next;
+    node.next.prev = node.prev;
+    this.move2Head(node);
+    node.value = value;
+  } else {
+    while (this.map.size >= this.capacity) {
+      this.deleteAtTail();
+    }
+
+    const node = {
+      key,
+      value,
+      next: null,
+      prev: null,
+    };
+    this.map.set(key, node);
+    this.move2Head(node);
+  }
+};
+
+/**
+ * Your LRUCache object will be instantiated and called as such:
+ * var obj = new LRUCache(capacity)
+ * var param_1 = obj.get(key)
+ * obj.put(key,value)
+ */

@@ -62,7 +62,48 @@ var copyRandomList = function (head) {
     };
 
     map.set(current, wip);
-    current = current.next
+    current = current.next;
+  }
+
+  wip = v.next;
+  while (wip) {
+    wip.random = map.get(wip.random);
+    wip = wip.next;
+  }
+
+  return v.next;
+};
+
+/**
+ * // Definition for a _Node.
+ * function _Node(val, next, random) {
+ *    this.val = val;
+ *    this.next = next;
+ *    this.random = random;
+ * };
+ */
+
+/**
+ * @param {_Node} head
+ * @return {_Node}
+ */
+var copyRandomList = function (head) {
+  const v = {
+    val: "v",
+    next: head,
+  };
+  const map = new Map();
+  let current = head;
+  let wip = v;
+
+  while (current) {
+    wip = wip.next = {
+      val: current.val,
+      next: null,
+      random: current.random,
+    };
+    map.set(current, wip);
+    current = current.next;
   }
 
   wip = v.next;

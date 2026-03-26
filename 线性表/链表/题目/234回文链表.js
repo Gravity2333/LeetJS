@@ -129,3 +129,53 @@ var isPalindrome = function (head) {
 
   return true;
 };
+
+// ------------------------------
+/**
+ * Definition for singly-linked list.
+ * function ListNode(val, next) {
+ *     this.val = (val===undefined ? 0 : val)
+ *     this.next = (next===undefined ? null : next)
+ * }
+ */
+
+function revserseLink(node) {
+  if (!node) return node;
+  let left = node;
+  let right = node.next;
+
+  while (right) {
+    const tmp = right.next;
+    right.next = left;
+    left = right;
+    right = tmp;
+  }
+
+  node.next = null;
+  return left;
+}
+
+/**
+ * @param {ListNode} head
+ * @return {boolean}
+ */
+var isPalindrome = function (head) {
+  let slow = head;
+  let fast = head;
+
+  while (fast?.next?.next) {
+    slow = slow.next;
+    fast = fast.next;
+    fast = fast.next;
+  }
+
+  let left = head;
+  let right = revserseLink(slow.next);
+
+  while (left && right) {
+    if (left.val !== right.val) return false;
+    left = left?.next;
+    right = right?.next;
+  }
+  return true;
+};

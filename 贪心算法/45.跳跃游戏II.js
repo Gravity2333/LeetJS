@@ -37,9 +37,29 @@ var jump = function (nums) {
         minSteps = Math.min(minSteps, dp[j]);
       }
     }
-    dp[i] = minSteps + 1
+    dp[i] = minSteps + 1;
   }
 
-  return dp[nums.length-1]
+  return dp[nums.length - 1];
 };
-[2,3,1,1,4]
+
+// [2,3,1,1,4]
+
+/**
+ * @param {number[]} nums
+ * @return {number}
+ */
+var jump = function (nums) {
+  // 到达 i 最少步数为 dp[i]
+  const dp = new Array(nums.length).fill(Infinity);
+  dp[0] = 0;
+
+  for (let i = 1; i < nums.length; i++) {
+    for (let j = 0; j < i; j++) {
+      if (nums[j] + j >= i) {
+        dp[i] = Math.min(dp[i], dp[j] + 1);
+      }
+    }
+  }
+  return dp.pop()
+};

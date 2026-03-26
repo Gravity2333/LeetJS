@@ -68,8 +68,48 @@ var mergeKLists = function (lists) {
       };
       lists[minIndex] = minPtr.next;
     }
-    lists = lists.filter(f=>f)
+    lists = lists.filter((f) => f);
   }
 
+  return v.next;
+};
+
+/**
+ * Definition for singly-linked list.
+ * function ListNode(val, next) {
+ *     this.val = (val===undefined ? 0 : val)
+ *     this.next = (next===undefined ? null : next)
+ * }
+ */
+/**
+ * @param {ListNode[]} lists
+ * @return {ListNode}
+ */
+var mergeKLists = function (lists) {
+  lists = lists.filter(f=>f)
+  let unmerged = 0;
+  const v = { next: null };
+  let wip = v;
+  while (unmerged < lists.length) {
+    let min = Infinity;
+    let minIndex = -1;
+    for (let i = 0; i < lists.length; i++) {
+      const head = lists[i];
+      if (!head) continue;
+      if (head.val < min) {
+        min = head.val;
+        minIndex = i;
+      }
+    }
+    wip = wip.next = {
+      val: min,
+      next: null,
+    };
+
+    lists[minIndex] = lists[minIndex]?.next;
+    if (!lists[minIndex]) {
+      unmerged++;
+    }
+  }
   return v.next;
 };
