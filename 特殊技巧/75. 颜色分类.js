@@ -29,7 +29,7 @@ var sortColors = function (nums) {
       nums[left] = nums[i];
       nums[i] = tmp;
       left++;
-       i++;
+      i++;
     } else if (nums[i] === 2) {
       const tmp = nums[right];
       nums[right] = nums[i];
@@ -43,32 +43,60 @@ var sortColors = function (nums) {
   return nums;
 };
 
-
-function swap(nums,i,j){
-  const tmp = nums[i]
-  nums[i] = nums[j]
-  nums[j] =tmp
+function swap(nums, i, j) {
+  const tmp = nums[i];
+  nums[i] = nums[j];
+  nums[j] = tmp;
 }
 /**
  * @param {number[]} nums
  * @return {void} Do not return anything, modify nums in-place instead.
  */
 var sortColors = function (nums) {
-  let left = 0 
-  let right = nums.length - 1
+  let left = 0;
+  let right = nums.length - 1;
 
-  for(let i=0;i<=right;){
-    if(nums[i] === 0){
-      swap(nums,left,i)
-      left++
-      i++
-    }else if(nums[i] === 2){
-       swap(nums,i, right)
-       right--
+  for (let i = 0; i <= right; ) {
+    if (nums[i] === 0) {
+      swap(nums, left, i);
+      left++;
+      i++;
+    } else if (nums[i] === 2) {
+      swap(nums, i, right);
+      right--;
+    } else {
+      i++;
+    }
+  }
+
+  return nums;
+};
+
+/**
+ * @param {number[]} nums
+ * @return {void} Do not return anything, modify nums in-place instead.
+ */
+var sortColors = function (nums) {
+  let left = 0;
+  let right = nums.length - 1;
+  for (let i = 0; i <= right; ) {
+    if (nums[i] === 0) {
+      swap(nums, i, left);
+      i++;
+      left++;
+    } else if (nums[i] === 2) {
+      swap(nums, i, right);
+      right--;
     }else{
       i++
     }
   }
-
   return nums
 };
+
+function swap(arr, i, j) {
+  const tmp = arr[i];
+  arr[i] = arr[j];
+  arr[j] = tmp;
+  return arr;
+}
